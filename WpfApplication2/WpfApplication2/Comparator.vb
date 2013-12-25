@@ -6,8 +6,8 @@ Public Class Comparator
     ''' <summary>
     ''' WalksDown the 3D Tree in CATIA
     ''' </summary>
-    Public Children3D As New Collection
-    Public Children2D As New Collection
+    Public ReadOnly Children3D As New Collection
+    Public ReadOnly Children2D As New Collection
 
 
     Sub WalkDownTree(oInProduct As Object)  'As Product)
@@ -29,21 +29,28 @@ Public Class Comparator
 
         'Dim k As Integer
         'For k = 1 To oInstances.Count
+        Try
+            Parallel.For(1, oInstances.Count, Sub(k)
 
-        Parallel.For(1, oInstances.Count, Sub(k)
+                                                  Dim oInst 'As Object
+                                                  oInst = oInstances.Item(k)
 
-                                              Dim oInst 'As Object
-                                              oInst = oInstances.Item(k)
+                                                  Children3D.Add(oInst)
 
-                                              Children3D.Add(oInst)
+                                                  'oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)  'apply design mode
 
-                                              'oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)  'apply design mode
+                                                  'If oInstances.Item(k).Parent.Parent.PartNumber = "B4818GAED-101" Then
+                                                  '  If Validation.IsComponent(oInst) = True Then
+                                                  Call WalkDownTree(oInst)
+                                                  'End If
+                                              End Sub)
 
-                                              'If oInstances.Item(k).Parent.Parent.PartNumber = "B4818GAED-101" Then
-                                              '  If Validation.IsComponent(oInst) = True Then
-                                              Call WalkDownTree(oInst)
-                                              'End If
-                                          End Sub)
+
+        Catch ex As Exception
+            MsgBox("You need a multicore computer")
+
+
+        End Try
 
 
     End Sub
