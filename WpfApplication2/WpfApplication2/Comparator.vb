@@ -1,5 +1,7 @@
 ﻿Imports ProductStructureTypeLib
 Imports Excel = Microsoft.Office.Interop.Excel
+Imports System.Threading.Tasks
+
 Public Class Comparator
     ''' <summary>
     ''' WalksDown the 3D Tree in CATIA
@@ -25,22 +27,23 @@ Public Class Comparator
         '-----Found an instance therefore it is a CATProduct
         'MsgBox "This is a CATProduct with part number " & oInProduct.ReferenceProduct.PartNumber
 
-        Dim k As Integer
-        For k = 1 To oInstances.Count
+        'Dim k As Integer
+        'For k = 1 To oInstances.Count
 
+        Parallel.For(1, oInstances.Count, Sub(k)
 
-            Dim oInst 'As Object
-            oInst = oInstances.Item(k)
+                                              Dim oInst 'As Object
+                                              oInst = oInstances.Item(k)
 
-            Children3D.Add(oInst)
+                                              Children3D.Add(oInst)
 
-            'oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)  'apply design mode
+                                              'oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)  'apply design mode
 
-            'If oInstances.Item(k).Parent.Parent.PartNumber = "B4818GAED-101" Then
-            '  If Validation.IsComponent(oInst) = True Then
-            Call WalkDownTree(oInst)
-            'End If
-        Next
+                                              'If oInstances.Item(k).Parent.Parent.PartNumber = "B4818GAED-101" Then
+                                              '  If Validation.IsComponent(oInst) = True Then
+                                              Call WalkDownTree(oInst)
+                                              'End If
+                                          End Sub)
 
 
     End Sub
@@ -311,7 +314,7 @@ Public Class Comparator
         UserSel2D.Clear()
     End Sub
     Sub Write2DToExcel()
-        
+
     End Sub
     ''' <summary>
     ''' Returns the real parent of a component

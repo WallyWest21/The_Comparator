@@ -65,7 +65,7 @@ Class MainWindow
 
         '    Try
 
-        '        mPartDoc = myCatia.ActiveDocument
+        'mPartDoc = myCatia.ActiveDocument
 
         '        mPart = mPartDoc.Part
 
