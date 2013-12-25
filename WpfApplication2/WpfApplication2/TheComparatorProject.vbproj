@@ -72,22 +72,15 @@
     <Compile Include="ChildrenList.vb" />
     <Compile Include="Comparator.vb" />
     <Compile Include="Drawing.vb" />
+    <Compile Include="MainWindow.xaml.vb">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Part.vb" />
     <Compile Include="Product.vb" />
     <Compile Include="Validation.vb" />
-    <Page Include="..\..\..\..\..\Dropbox\Programming\WPF\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <Link>MainWindow.xaml</Link>
-    </Page>
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\..\..\..\..\Dropbox\Programming\WPF\MainWindow.xaml.vb">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-      <Link>MainWindow.xaml.vb</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +259,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ethics-scale.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
