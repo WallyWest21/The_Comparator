@@ -7,6 +7,9 @@ Public Class Comparator
     ''' WalksDown the 3D Tree in CATIA
     ''' </summary>
     Public ReadOnly Children3D As New Collection
+    ''' <summary>
+    ''' It is a Collection of all the items in 2D
+    ''' </summary>
     Public ReadOnly Children2D As New Collection
 
 
@@ -280,7 +283,7 @@ Public Class Comparator
         QtyCol = 1
 
 
-        Dim ItemNo = New Drawing.ItemNo
+        Dim ItemNo = New Drawing.Item
         Dim MatSpec = New Drawing.MatlSpec
         Dim Nomenclature = New Drawing.Nomenclature
         Dim PartNo = New Drawing.PartNo
