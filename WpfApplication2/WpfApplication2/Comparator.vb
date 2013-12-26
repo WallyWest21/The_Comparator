@@ -17,6 +17,7 @@ Public Class Comparator
         Dim oInstances As Products
         oInstances = oInProduct.Products
 
+
         '-----No instances found then this is CATPart
 
         If oInstances.Count = 0 Then
