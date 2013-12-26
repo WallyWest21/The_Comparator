@@ -13,7 +13,7 @@ Public Class Comparator
     Public ReadOnly Children2D As New Collection
 
 
-    Sub WalkDownTree(oInProduct As Object)  'As Product)
+    Sub WalkDownTree(ByVal oInProduct As Object)  'As Product)
 
         Dim Validation As New Validation
 
