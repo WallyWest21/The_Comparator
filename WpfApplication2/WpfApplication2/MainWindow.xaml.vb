@@ -11,8 +11,8 @@ Imports System
 
 Class MainWindow
     Private Sub Label_MouseDown_2(sender As Object, e As MouseButtonEventArgs)
-        Dim Comparator As New Comparator
 
+        Dim Comparator As New Comparator
         Call Comparator.Select3D()
 
     End Sub

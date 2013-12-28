@@ -71,12 +71,12 @@
     </ApplicationDefinition>
     <Compile Include="ChildrenList.vb" />
     <Compile Include="Comparator.vb" />
-    <Compile Include="Drawing.vb" />
+    <Compile Include="oDrawing.vb" />
     <Compile Include="MainWindow.xaml.vb">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Part.vb" />
-    <Compile Include="Product.vb" />
+    <Compile Include="oPart.vb" />
+    <Compile Include="oProduct.vb" />
     <Compile Include="Validation.vb" />
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>
@@ -127,6 +127,7 @@
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
+    <None Include="ClassDiagram3.cd" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>

@@ -1,4 +1,6 @@
-﻿Public Class Product
+﻿
+
+Public Class oProduct
 
     Function PartNumber() As String
         Throw New NotImplementedException

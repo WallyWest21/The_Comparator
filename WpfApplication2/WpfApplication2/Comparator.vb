@@ -1,8 +1,10 @@
 ﻿Imports ProductStructureTypeLib
 Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Threading.Tasks
+Imports ProductStructureTypeLib.CatWorkModeType
 
 Public Class Comparator
+
     ''' <summary>
     ''' WalksDown the 3D Tree in CATIA
     ''' </summary>
@@ -11,7 +13,13 @@ Public Class Comparator
     ''' It is a Collection of all the items in 2D
     ''' </summary>
     Public ReadOnly Children2D As New Collection
-
+    ''' <summary>
+    ''' Returns the real parent of a component
+    ''' </summary>
+    Function RealParent(ByVal oInst) As String
+        RealParent = "Fake"
+        Return RealParent
+    End Function
 
     Sub WalkDownTree(ByVal oInProduct As Object)  'As Product)
 
@@ -20,40 +28,32 @@ Public Class Comparator
         Dim oInstances As Products
         oInstances = oInProduct.Products
 
-
         '-----No instances found then this is CATPart
 
         If oInstances.Count = 0 Then
-            'MsgBox "This is a CATPart with part number " & oInProduct.PartNumber
+
             Exit Sub
         End If
 
-        '-----Found an instance therefore it is a CATProduct
-        'MsgBox "This is a CATProduct with part number " & oInProduct.ReferenceProduct.PartNumber
-
-        'Dim k As Integer
-        'For k = 1 To oInstances.Count
+  
         Try
             Parallel.For(1, oInstances.Count, Sub(k)
 
                                                   Dim oInst 'As Object
                                                   oInst = oInstances.Item(k)
 
-                                                  Children3D.Add(oInst)
+                                                  If Validation.IsComponent(oInst) = False And oInstances.Item(k).Parent.Parent.PartNumber = oInProduct.partnumber Then
+                                                      Children3D.Add(oInst)
+                                                  End If
 
-                                                  'oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)  'apply design mode
+                                                  oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)   'apply design mode
 
-                                                  'If oInstances.Item(k).Parent.Parent.PartNumber = "B4818GAED-101" Then
-                                                  '  If Validation.IsComponent(oInst) = True Then
                                                   Call WalkDownTree(oInst)
-                                                  'End If
-                                              End Sub)
 
+                                              End Sub)
 
         Catch ex As Exception
             MsgBox("You need a multicore computer")
-
-
         End Try
 
 
@@ -274,7 +274,7 @@ Public Class Comparator
         Dim actTable
         actTable = UserSel2D.Item(1).Value
 
-        Dim Dwg As Drawing = New Drawing
+        Dim Dwg As oDrawing = New oDrawing
         Dim NumberOfUsefulCol As Integer
         Dim NumberOfUsefulRows As Integer
         Dim PartNumberCol As Integer
@@ -283,10 +283,10 @@ Public Class Comparator
         QtyCol = 1
 
 
-        Dim ItemNo = New Drawing.Item
-        Dim MatSpec = New Drawing.MatlSpec
-        Dim Nomenclature = New Drawing.Nomenclature
-        Dim PartNo = New Drawing.PartNo
+        Dim ItemNo = New oDrawing.Item
+        Dim MatSpec = New oDrawing.MatlSpec
+        Dim Nomenclature = New oDrawing.Nomenclature
+        Dim PartNo = New oDrawing.PartNo
 
         ItemNo.Column = actTable.NumberOfColumns
         MatSpec.Column = actTable.NumberOfColumns - 1
@@ -330,9 +330,10 @@ Public Class Comparator
     ''' <summary>
     ''' Returns the real parent of a component
     ''' </summary>
-    Function RealParent() As String
 
-    End Function
+
+
+
 
     Sub Is3DPartIn2D()
 
