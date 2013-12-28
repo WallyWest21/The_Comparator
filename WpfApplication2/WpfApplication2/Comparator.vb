@@ -2,8 +2,10 @@
 Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Threading.Tasks
 Imports ProductStructureTypeLib.CatWorkModeType
-
+Imports INFITF.CatFileSelectionMode
+'Imports INFITF
 Public Class Comparator
+    Dim Validation As New Validation
 
     ''' <summary>
     ''' WalksDown the 3D Tree in CATIA
@@ -14,17 +16,24 @@ Public Class Comparator
     ''' </summary>
     Public ReadOnly Children2D As New Collection
     ''' <summary>
-    ''' Returns the real parent of a component
+    ''' Returns the real parent of the child of a component
     ''' </summary>
     Function RealParent(ByVal oInst) As String
-        RealParent = "Fake"
-        Return RealParent
+        Dim oParent As Object
+        oParent = oInst.parent.parent
+
+        If Validation.IsComponent(oParent) = True Then
+            Return RealParent(oParent.parent.parent)
+        Else
+            Return oParent.partnumber
+        End If
+
     End Function
 
     Sub WalkDownTree(ByVal oInProduct As Object)  'As Product)
 
         Dim Validation As New Validation
-
+        Dim test As String
         Dim oInstances As Products
         oInstances = oInProduct.Products
 
@@ -39,7 +48,7 @@ Public Class Comparator
         Try
             Parallel.For(1, oInstances.Count, Sub(k)
 
-                                                  Dim oInst 'As Object
+                                                  Dim oInst As INFITF.AnyObject
                                                   oInst = oInstances.Item(k)
 
                                                   If Validation.IsComponent(oInst) = False And oInstances.Item(k).Parent.Parent.PartNumber = oInProduct.partnumber Then
@@ -49,6 +58,7 @@ Public Class Comparator
                                                   oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)   'apply design mode
 
                                                   Call WalkDownTree(oInst)
+                                                  test = RealParent(oInst)
 
                                               End Sub)
 
@@ -157,27 +167,22 @@ Public Class Comparator
             Exit Sub
         End Try
 
-
         Dim ActProd As Products
         ActProd = ActiveProductDocument.Product
 
-        Dim what(1)
+        Dim what(0)
         what(0) = "Product"
-        what(1) = "Part"
+        'what(1) = "Part"
 
         Dim UserSel As Object
         UserSel = CATIA.ActiveDocument.Selection
         UserSel.Clear()
 
-
-
-
         Dim e As String
-        e = UserSel.selectelement3(what, "Select a Product or a Component", 0, 2, 0)
+        e = UserSel.selectelement3(what, "Select a Product or a Component", False, 2, False)
 
 
         Dim SelectedElement As Integer
-
         Dim SelectedCollection As New Collection
 
         For SelectedElement = 1 To UserSel.Count
