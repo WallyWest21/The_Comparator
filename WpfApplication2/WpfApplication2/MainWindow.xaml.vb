@@ -33,4 +33,13 @@ Class MainWindow
     End Sub
 
     
+    Private Sub Window_KeyDown(sender As Object, e As KeyEventArgs)
+        If e.Key = Key.Left Then
+            'If e1.Key = Key.Right Then
+            _2DLabel.Content = "OG"
+            'End If
+
+        End If
+
+    End Sub
 End Class

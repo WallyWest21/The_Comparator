@@ -50,12 +50,11 @@ Public Class Comparator
 
                                                   Dim oInst As INFITF.AnyObject
                                                   oInst = oInstances.Item(k)
+                                                  oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)   'apply design mode
 
                                                   If Validation.IsComponent(oInst) = False And oInstances.Item(k).Parent.Parent.PartNumber = oInProduct.partnumber Then
                                                       Children3D.Add(oInst)
                                                   End If
-
-                                                  oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)   'apply design mode
 
                                                   Call WalkDownTree(oInst)
                                                   test = RealParent(oInst)
@@ -120,7 +119,7 @@ Public Class Comparator
         'Next i
 
 
-        Dim Realchildren = From child As Object In Children3D _
+        Dim Realchildren = From child As Object In Children3D.AsParallel() _
                             Select child.partnumber
         ' Where child.parent.parent.partnumber = "Product85"
 
@@ -155,7 +154,15 @@ Public Class Comparator
     Sub Select3D()
 
         Dim CATIA As Object
-        CATIA = GetObject(, "CATIA.Application")
+
+        Try
+            CATIA = GetObject(, "CATIA.Application")
+
+        Catch ex As Exception
+            MsgBox("The Application you seek" & vbCrLf & "Cannot be located." & vbCrLf & "Open a CATIA session.")
+            Exit Sub
+        End Try
+
 
         Dim ActiveProductDocument As ProductDocument
 
@@ -230,7 +237,14 @@ Public Class Comparator
     Sub Select2D()
 
         Dim CATIA As Object
-        CATIA = GetObject(, "CATIA.Application")
+        Try
+            CATIA = GetObject(, "CATIA.Application")
+
+        Catch ex As Exception
+            MsgBox("The Application you seek" & vbCrLf & "Cannot be located." & vbCrLf & "Open a CATIA session.")
+            Exit Sub
+        End Try
+
 
         Dim oXL As Excel.Application
         Dim oWB As Excel.Workbook
