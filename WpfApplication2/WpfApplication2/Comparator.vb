@@ -3,8 +3,11 @@ Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Threading.Tasks
 Imports ProductStructureTypeLib.CatWorkModeType
 Imports INFITF.CatFileSelectionMode
+<<<<<<< HEAD
 Imports System.Collections.ObjectModel
 
+=======
+>>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
 'Imports INFITF
 Public Class Comparator
     Dim Validation As New Validation
@@ -36,7 +39,10 @@ Public Class Comparator
 
         Dim Validation As New Validation
         Dim test As String
+<<<<<<< HEAD
         Dim Realchildren3D As New Collection
+=======
+>>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
         Dim oInstances As Products
         oInstances = oInProduct.Products
 
@@ -60,8 +66,11 @@ Public Class Comparator
                                                       Realchildren3D.Add(oInst.partnumber)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                   End If
 
+=======
+>>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
 =======
 >>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
                                                   Call WalkDownTree(oInst)
