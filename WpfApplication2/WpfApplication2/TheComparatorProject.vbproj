@@ -147,6 +147,24 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+    <COMReference Include="CATSmarTeamInteg">
+      <Guid>{37EB6106-2CBA-4A69-B0F7-185EDF69CFC7}</Guid>
+      <VersionMajor>0</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="DRAFTINGITF">
+      <Guid>{73130905-462A-11D1-A26A-0000F87546A1}</Guid>
+      <VersionMajor>0</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
     <COMReference Include="HybridShapeTypeLib">
       <Guid>{87EE735C-DF70-11D1-8556-0060941979CE}</Guid>
       <VersionMajor>0</VersionMajor>
