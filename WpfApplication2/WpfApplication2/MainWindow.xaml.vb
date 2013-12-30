@@ -2,11 +2,17 @@
 Option Explicit On
 
 'Imports INFITF
-Imports MECMOD
-Imports PARTITF
+Imports MECMOD 'Mechanical Modeler & Sketcher 
+Imports PARTITF 'Part Design features ex: Pad, Split, Sweep
 Imports KnowledgewareTypeLib
 Imports HybridShapeTypeLib
 Imports ProductStructureTypeLib
+
+'Imports CATInstantCollabItf
+'Imports INFITF
+'Imports SPATypeLib
+
+
 Imports System
 
 Class MainWindow
@@ -33,4 +39,18 @@ Class MainWindow
     End Sub
 
     
+    Private Sub Window_KeyDown(sender As Object, e As KeyEventArgs)
+        If e.Key = Key.Left Then
+            'If e1.Key = Key.Right Then
+            _2DLabel.Content = "OG"
+            'End If
+
+        End If
+
+    End Sub
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
 End Class

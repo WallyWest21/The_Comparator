@@ -2,8 +2,12 @@
 Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Threading.Tasks
 Imports ProductStructureTypeLib.CatWorkModeType
+Imports INFITF.CatFileSelectionMode
+Imports System.Collections.ObjectModel
 
+'Imports INFITF
 Public Class Comparator
+    Dim Validation As New Validation
 
     ''' <summary>
     ''' WalksDown the 3D Tree in CATIA
@@ -14,17 +18,25 @@ Public Class Comparator
     ''' </summary>
     Public ReadOnly Children2D As New Collection
     ''' <summary>
-    ''' Returns the real parent of a component
+    ''' Returns the real parent of the child of a component
     ''' </summary>
     Function RealParent(ByVal oInst) As String
-        RealParent = "Fake"
-        Return RealParent
+        Dim oParent As Object
+        oParent = oInst.parent.parent
+
+        If Validation.IsComponent(oParent) = True Then
+            Return RealParent(oParent.parent.parent)
+        Else
+            Return oParent.partnumber
+        End If
+
     End Function
 
     Sub WalkDownTree(ByVal oInProduct As Object)  'As Product)
 
         Dim Validation As New Validation
-
+        Dim test As String
+        Dim Realchildren3D As New Collection
         Dim oInstances As Products
         oInstances = oInProduct.Products
 
@@ -39,16 +51,21 @@ Public Class Comparator
         Try
             Parallel.For(1, oInstances.Count, Sub(k)
 
-                                                  Dim oInst 'As Object
+                                                  Dim oInst As INFITF.AnyObject
                                                   oInst = oInstances.Item(k)
+                                                  oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)   'apply design mode
 
                                                   If Validation.IsComponent(oInst) = False And oInstances.Item(k).Parent.Parent.PartNumber = oInProduct.partnumber Then
                                                       Children3D.Add(oInst)
+                                                      Realchildren3D.Add(oInst.partnumber)
+
+<<<<<<< HEAD
                                                   End If
 
-                                                  oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)   'apply design mode
-
+=======
+>>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
                                                   Call WalkDownTree(oInst)
+                                                  test = RealParent(oInst)
 
                                               End Sub)
 
@@ -110,7 +127,7 @@ Public Class Comparator
         'Next i
 
 
-        Dim Realchildren = From child As Object In Children3D _
+        Dim Realchildren = From child As Object In Children3D.AsParallel() _
                             Select child.partnumber
         ' Where child.parent.parent.partnumber = "Product85"
 
@@ -145,7 +162,15 @@ Public Class Comparator
     Sub Select3D()
 
         Dim CATIA As Object
-        CATIA = GetObject(, "CATIA.Application")
+
+        Try
+            CATIA = GetObject(, "CATIA.Application")
+
+        Catch ex As Exception
+            MsgBox("The Application you seek" & vbCrLf & "Cannot be located." & vbCrLf & "Open a CATIA session.")
+            Exit Sub
+        End Try
+
 
         Dim ActiveProductDocument As ProductDocument
 
@@ -157,27 +182,22 @@ Public Class Comparator
             Exit Sub
         End Try
 
-
         Dim ActProd As Products
         ActProd = ActiveProductDocument.Product
 
-        Dim what(1)
+        Dim what(0)
         what(0) = "Product"
-        what(1) = "Part"
+        'what(1) = "Part"
 
         Dim UserSel As Object
         UserSel = CATIA.ActiveDocument.Selection
         UserSel.Clear()
 
-
-
-
         Dim e As String
-        e = UserSel.selectelement3(what, "Select a Product or a Component", 0, 2, 0)
+        e = UserSel.selectelement3(what, "Select a Product or a Component", False, 2, False)
 
 
         Dim SelectedElement As Integer
-
         Dim SelectedCollection As New Collection
 
         For SelectedElement = 1 To UserSel.Count
@@ -225,7 +245,14 @@ Public Class Comparator
     Sub Select2D()
 
         Dim CATIA As Object
-        CATIA = GetObject(, "CATIA.Application")
+        Try
+            CATIA = GetObject(, "CATIA.Application")
+
+        Catch ex As Exception
+            MsgBox("The Application you seek" & vbCrLf & "Cannot be located." & vbCrLf & "Open a CATIA session.")
+            Exit Sub
+        End Try
+
 
         Dim oXL As Excel.Application
         Dim oWB As Excel.Workbook
@@ -344,5 +371,5 @@ Public Class Comparator
     Sub Is3DQtyEquals2DQty()
 
     End Sub
-
+  
 End Class
