@@ -3,11 +3,9 @@ Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Threading.Tasks
 Imports ProductStructureTypeLib.CatWorkModeType
 Imports INFITF.CatFileSelectionMode
-<<<<<<< HEAD
+
 Imports System.Collections.ObjectModel
 
-=======
->>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
 'Imports INFITF
 Public Class Comparator
     Dim Validation As New Validation
@@ -23,6 +21,7 @@ Public Class Comparator
     ''' <summary>
     ''' Returns the real parent of the child of a component
     ''' </summary>
+    Public Property Realchildren3D As New ObservableCollection(Of String)
     Function RealParent(ByVal oInst) As String
         Dim oParent As Object
         oParent = oInst.parent.parent
@@ -35,14 +34,14 @@ Public Class Comparator
 
     End Function
 
-    Sub WalkDownTree(ByVal oInProduct As Object)  'As Product)
+    Sub WalkDownTree(ByVal oInProduct As Object)
+        'As Product)
 
         Dim Validation As New Validation
         Dim test As String
-<<<<<<< HEAD
-        Dim Realchildren3D As New Collection
-=======
->>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
+
+
+
         Dim oInstances As Products
         oInstances = oInProduct.Products
 
@@ -53,7 +52,7 @@ Public Class Comparator
             Exit Sub
         End If
 
-  
+       
         Try
             Parallel.For(1, oInstances.Count, Sub(k)
 
@@ -65,14 +64,9 @@ Public Class Comparator
                                                       Children3D.Add(oInst)
                                                       Realchildren3D.Add(oInst.partnumber)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
                                                   End If
 
-=======
->>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
-=======
->>>>>>> 4cec609b8c8275288eeaedf3ea87b82bc191b779
+
                                                   Call WalkDownTree(oInst)
                                                   test = RealParent(oInst)
 
@@ -81,7 +75,7 @@ Public Class Comparator
         Catch ex As Exception
             MsgBox("You need a multicore computer")
         End Try
-
+        'Realchildren3D.Add("klhkjhklhjkhkjlhkljl")
 
     End Sub
 
@@ -136,7 +130,7 @@ Public Class Comparator
         'Next i
 
 
-        Dim Realchildren = From child As Object In Children3D.AsParallel() _
+        Dim Realchildren = From child As Object In Children3D.AsParallel().AsParallel _
                             Select child.partnumber
         ' Where child.parent.parent.partnumber = "Product85"
 
@@ -152,6 +146,7 @@ Public Class Comparator
             'End If
             'If Realchildren(i).Parent.Name = "B472289-527" Then
             oXL.Sheets(1).Cells(i + 3, 1).Value = 1
+
             oXL.Sheets(1).Cells(i + 3, 2).Value = Realchildren(i)
             'oXL.Sheets(1).Cells(j + 3, 3).Value = Realchildren(i).Name
             'oXL.Sheets(1).Cells(j + 3, 3).Value = Realchildren(i).ReferenceProduct.Parent.Name
@@ -163,12 +158,10 @@ Public Class Comparator
             'End If
         Next i
 
-
-
     End Sub
 
 
-    Sub Select3D()
+    Sub Select3D(Optional ByRef TheRealChildren = "boogie")
 
         Dim CATIA As Object
 
@@ -380,5 +373,5 @@ Public Class Comparator
     Sub Is3DQtyEquals2DQty()
 
     End Sub
-  
+
 End Class
