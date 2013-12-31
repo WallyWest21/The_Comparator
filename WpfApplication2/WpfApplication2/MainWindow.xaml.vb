@@ -78,13 +78,20 @@ Class MainWindow
 
     Private Sub HTMLLabel_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles HTMLLabel.MouseDown
 
-        ' Dim comp As ChildrenList
+        Dim comp As New ChildrenList
+        Dim comparator As Comparator
+
 
         '    lst1.Add("New Item")
 
         'ListBox1.ItemsSource = ChildrenList.
+        comp.Add("456")
+        ' comp.Add(comparator.Realchildren3D(1))
 
-
+        ListBox1.ItemsSource = comp
 
     End Sub
+
+    
+
 End Class

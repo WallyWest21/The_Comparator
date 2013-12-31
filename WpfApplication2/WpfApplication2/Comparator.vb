@@ -3,7 +3,9 @@ Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Threading.Tasks
 Imports ProductStructureTypeLib.CatWorkModeType
 Imports INFITF.CatFileSelectionMode
-
+Imports DRAFTINGITF
+Imports MECMOD
+Imports PARTITF
 Imports System.Collections.ObjectModel
 
 'Imports INFITF
@@ -76,6 +78,13 @@ Public Class Comparator
             MsgBox("You need a multicore computer")
         End Try
         'Realchildren3D.Add("klhkjhklhjkhkjlhkljl")
+        Dim comp As New ChildrenList
+
+        '    lst1.Add("New Item")
+
+        'ListBox1.ItemsSource = ChildrenList.
+        comp.Add("comparator")
+
 
     End Sub
 
