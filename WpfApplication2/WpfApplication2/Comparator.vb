@@ -7,11 +7,10 @@ Imports DRAFTINGITF
 Imports MECMOD
 Imports PARTITF
 Imports System.Collections.ObjectModel
-
 'Imports INFITF
 Public Class Comparator
     Dim Validation As New Validation
-
+    Dim comp As New ChildrenList
     ''' <summary>
     ''' WalksDown the 3D Tree in CATIA
     ''' </summary>
@@ -24,6 +23,7 @@ Public Class Comparator
     ''' Returns the real parent of the child of a component
     ''' </summary>
     Public Property Realchildren3D As New ObservableCollection(Of String)
+    Public Property Selected3DElements As New ObservableCollection(Of String)
     Function RealParent(ByVal oInst) As String
         Dim oParent As Object
         oParent = oInst.parent.parent
@@ -65,7 +65,7 @@ Public Class Comparator
                                                   If Validation.IsComponent(oInst) = False And oInstances.Item(k).Parent.Parent.PartNumber = oInProduct.partnumber Then
                                                       Children3D.Add(oInst)
                                                       Realchildren3D.Add(oInst.partnumber)
-
+                                                      comp.Add(oInst.partnumber)
                                                   End If
 
 
@@ -78,7 +78,7 @@ Public Class Comparator
             MsgBox("You need a multicore computer")
         End Try
         'Realchildren3D.Add("klhkjhklhjkhkjlhkljl")
-        Dim comp As New ChildrenList
+
 
         '    lst1.Add("New Item")
 
@@ -172,7 +172,7 @@ Public Class Comparator
 
     Sub Select3D(Optional ByRef TheRealChildren = "boogie")
 
-        Dim CATIA As Object
+        Dim CATIA As INFITF.Application
 
         Try
             CATIA = GetObject(, "CATIA.Application")
@@ -200,7 +200,7 @@ Public Class Comparator
         what(0) = "Product"
         'what(1) = "Part"
 
-        Dim UserSel As Object
+        Dim UserSel As INFITF.Selection
         UserSel = CATIA.ActiveDocument.Selection
         UserSel.Clear()
 
@@ -214,6 +214,7 @@ Public Class Comparator
         For SelectedElement = 1 To UserSel.Count
 
             SelectedCollection.Add(UserSel.Item(SelectedElement).Value)
+            Selected3DElements.Add(UserSel.Item(SelectedElement).Value.partnumber)
         Next SelectedElement
 
         UserSel.Clear()
@@ -252,6 +253,8 @@ Public Class Comparator
         'Call WriteToExcel()
 
         'MsgBox("Done " & Children(Children.Count).partnumber)
+
+
     End Sub
     Sub Select2D()
 
@@ -382,5 +385,27 @@ Public Class Comparator
     Sub Is3DQtyEquals2DQty()
 
     End Sub
+    Public Class ChildrenList1
+        Inherits ObservableCollection(Of String)
+        ' Implements INotifyPropertyChanged
+        ' Public Property pChildrenList As New ObservableCollection(Of String)
+        ' Inherits ObservableCollection(Of Object)
+        Public Sub New()
 
+            '  Dim Item
+
+            ' Dim Comparator As New Comparator
+            ' For Each Item In Comparator.Children3D
+            'For Item = 1 To 25
+            MyBase.Add("nkhgkghbkhgkhklhgbkjhgjkhgkhfvk")
+            MyBase.Add("kl;njkbjfkuigkhjklk")
+            ' Next
+
+            MyBase.Add("second tolast")
+            MyBase.Add("kl;lsdfgd Super Last1")
+        End Sub
+
+
+
+    End Class
 End Class

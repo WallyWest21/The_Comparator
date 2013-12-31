@@ -14,17 +14,17 @@ Public Class ChildrenList
     ' Inherits ObservableCollection(Of Object)
     Public Sub New()
 
-        Dim Item
+        '  Dim Item
 
-        Dim Comparator As New Comparator
+        ' Dim Comparator As New Comparator
         ' For Each Item In Comparator.Children3D
         'For Item = 1 To 25
-        MyBase.Add("nkhgkghbkhgkhklhgbkjhgjkhgkhfvk")
-        MyBase.Add("kl;njkbjfkuigkhjklk")
+        MyBase.Add("No item selected")
+        'MyBase.Add("kl;njkbjfkuigkhjklk")
         ' Next
 
-        MyBase.Add("second tolast")
-        MyBase.Add("kl;lsdfgd Super Last")
+        'MyBase.Add("second tolast")
+        'MyBase.Add("kl;lsdfgd Super Last")
     End Sub
 
 

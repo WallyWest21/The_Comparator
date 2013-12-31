@@ -16,12 +16,17 @@ Imports System.Collections
 
 Imports System
 Imports System.Collections.ObjectModel
+Imports INFITF
 
 Class MainWindow
     Private Sub Label_MouseDown_2(sender As Object, e As MouseButtonEventArgs)
 
         Dim Comparator As New Comparator
+
+
         Call Comparator.Select3D()
+        ListBox1.ItemsSource = Comparator.Selected3DElements
+        ListBox2.ItemsSource = Comparator.Realchildren3D
 
     End Sub
 
@@ -71,27 +76,61 @@ Class MainWindow
     'End Sub
 
 
-    
+
     Private Sub HTML_Label_MouseDown(sender As Object, e As MouseButtonEventArgs)
 
     End Sub
 
     Private Sub HTMLLabel_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles HTMLLabel.MouseDown
 
-        Dim comp As New ChildrenList
+        Dim comp As ChildrenList
         Dim comparator As Comparator
 
 
         '    lst1.Add("New Item")
 
         'ListBox1.ItemsSource = ChildrenList.
-        comp.Add("456")
+        ' comp.Add("456")
         ' comp.Add(comparator.Realchildren3D(1))
 
         ListBox1.ItemsSource = comp
 
     End Sub
 
-    
 
+
+    Private Sub Label_Drop(sender As Object, e As DragEventArgs)
+
+        'Dim theFiles() As String = CType(e.Data.GetData("FileDrop", True), String())
+        'For Each theFile As String In theFiles
+        '    MsgBox(theFile)
+        'Next
+
+        'Dim files As Object = e.Data.GetData("Object")
+        Dim CATIA As Object
+        CATIA = GetObject(, "CATIA.Application")
+
+
+        Dim theFiles = e.Data.GetDataPresent("Part", True)
+        'For Each theFile As String In theFiles
+        Try
+            MsgBox(theFiles)
+
+
+        Catch ex As Exception
+            MsgBox("It is empty!")
+        End Try
+        ' Next
+
+
+        '' For Each path In files
+        'MsgBox(files.Name)
+        ''Next
+
+        'Dim theFiles() As String = CType(e.Data.GetData("FileDrop", True), String())
+        ''  For Each theFile As String In theFiles
+        'MsgBox(theFiles)
+        'Next
+
+    End Sub
 End Class
