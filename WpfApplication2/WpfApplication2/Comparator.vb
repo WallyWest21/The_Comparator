@@ -287,34 +287,18 @@ Public Class Comparator
         oXL.DisplayAlerts = False
         oXL.Visible = True
         Dim Dwg As oDrawing = New oDrawing
-        'Dim ActiveDrawingDocument 'As DrawingDocument
-        'ActiveDwgDocument = CATIA.ActiveDocument
-
-        'Dim ActProd As Product
-        'Set ActDrw = ActiveProductDocument.Drawing
-
-        'Dim ProductChildren As Products
-        'Set ProductChildren = ActProd.Products
-
-
+     
         Dim what(0)
         what(0) = "DrawingTable"
         Dim UserSel2D As INFITF.Selection
-        'Dim UserSel As SELECTEDELEMENT
         UserSel2D = CATIA.ActiveDocument.Selection
         UserSel2D.Clear()
 
         'Dim e As catbstr
         Dim e As String
-        'e = UserSel2D.selectelement2(what, "Select a Product or a Component", False)
+
         e = UserSel2D.SelectElement3(what, "Select a Product or a Component", False, 2, True)
-        'UserForm1.Show
-        'UserForm1.TextBox1 = (UserSel.Item(1).Value.partnumber)
-
-        'MsgBox (UserSel2D.Item(1).Value.Name)
-        'UserForm1.Show
-        'UserForm1.TextBox1 = (UserSel.Item(1).Value.partnumber)
-
+  
         Dim MaximumOfColumnsInBigTable As Integer = 0
         Dim MaximumOfRowsInBigTable As Integer = 0
 
@@ -376,62 +360,6 @@ Public Class Comparator
                 RowIndexOfBigTable += 1
             Next
         Next
-
-
-
-
-
-        Dim actTable As DrawingTable
-
-        actTable = UserSel2D.Item(1).Value
-
-        ' Dim Dwg As oDrawing = New oDrawing
-        Dim NumberOfUsefulCol As Integer
-        Dim NumberOfUsefulRows As Integer
-        Dim PartNumberCol As Integer
-
-        Dim QtyCol
-        QtyCol = 1
-
-
-        'Dim ItemNo = New oDrawing.Item
-        'Dim MatSpec = New oDrawing.MatlSpec
-        'Dim Nomenclature = New oDrawing.Nomenclature
-        'Dim PartNo = New oDrawing.PartNo
-
-        'ItemNo.Column = actTable.NumberOfColumns
-        'MatSpec.Column = actTable.NumberOfColumns - 1
-        'Nomenclature.Column = actTable.NumberOfColumns - 2
-        'PartNo.Column = actTable.NumberOfColumns - 3
-
-        ' The assemblies are between Column 1 and NUmberofCoumns-5
-
-        'For i = 1 To actTable.NumberOfrows ' This would only work on the first table selected
-        '    If Left(actTable.getcellstring(i + 1, PartNo.Column), 1) = "-" Then
-        '        If CInt(Mid(actTable.getcellstring(i + 1, PartNo.Column), 2, 3)) Mod 100 >= 1 Then
-        '            If IsNumeric(actTable.getcellstring(i + 1, ItemNo.Column)) = False Then
-        '                Dwg.Cols = i
-        '                Exit For
-        '            End If
-        '        End If
-        '    End If
-        'Next i
-
-        'For i = 1 To actTable.NumberOfrows
-        '    oXL.Cells(i + 13, 5) = actTable.getcellstring(i, QtyCol)
-        '    oXL.Cells(i + 13, 6) = actTable.getcellstring(i, PartNo.Column)
-        '    oXL.Cells(i + 13, 7) = actTable.getcellstring(i, Nomenclature.Column)
-        '    oXL.Cells(i + 13, 8) = actTable.getcellstring(i, MatSpec.Column)
-        '    oXL.Cells(i + 13, 9) = actTable.getcellstring(i, ItemNo.Column)
-        'Next i
-        'For j = 1 To actTable.NumberOfColumns
-
-        '    For i = 1 To actTable.NumberOfRows - 1
-        '        oXL.Cells(i + 13, j) = actTable.GetCellString(i, j)
-        '    Next i
-
-        'Next
-
 
         For j = 0 To MaximumOfColumnsInBigTable
 

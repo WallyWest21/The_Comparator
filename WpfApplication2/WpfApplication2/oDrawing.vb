@@ -2,6 +2,7 @@
 Public Class oDrawing
 
     Public DrawingCode As String
+    Public ParentOf2DAssemblies As New Collection
     Public Function RemoveAssemblyRow(ByVal DrawingTable As DrawingTable, ByVal RowIndexOfTable As Integer, ByVal ColumnIndexOfTable As Integer) As Boolean
         Return False
         If CInt(Right(DrawingTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable), 3)) / 500 >= 1 Then
@@ -46,7 +47,14 @@ Public Class oDrawing
         Return DrawingTable
     End Function
 
-   
+    Public Class Children2D
+        Public ItemNo As Integer
+        Public Nomenclature As String
+        Public PartNo As String
+        Public Parent As String
+        Public DrawingNo As String
+        Public MatSpec As New Collection
+    End Class
 End Class
 
 
