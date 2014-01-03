@@ -27,8 +27,8 @@
         <Label x:Name="HTMLLabel" Content="&lt;/&gt;" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="3"/>
         <Label Content="XL" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF00A600" FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
         <Label Content="The Comparator" HorizontalAlignment="Left" Height="75" Margin="20,10,0,0" VerticalAlignment="Top" Width="394" FontSize="48" Foreground="White" FontWeight="ExtraLight" Grid.ColumnSpan="3"/>
-        <ListBox x:Name="ListBox1" Grid.Row="2" Background="#FFDC572E" ItemsSource="{Binding Source={StaticResource ChildrenlistData}}" IsSynchronizedWithCurrentItem="True" Grid.ColumnSpan="3" Margin="10" Foreground="#FFFDFBFB" FontSize="18"/>
-        <ListBox x:Name="Listbox2" Grid.Row="4" DataContext="{DynamicResource ChildrenlistData}" ItemsSource="{Binding BindsDirectlyToSource=True, Mode=OneWay, NotifyOnSourceUpdated=True}" IsSynchronizedWithCurrentItem="True" Grid.ColumnSpan="3" Margin="10" Background="#FFBF1E4B" Foreground="#FFF9F8F8" FontSize="18"/>
+        <ListBox x:Name="ListBox1" Grid.Row="2" Background="#FFDC572E"  Grid.ColumnSpan="3" Margin="10" Foreground="#FFFDFBFB" FontSize="18" ItemsSource="{Binding Source={StaticResource ChildrenlistData}}" IsSynchronizedWithCurrentItem="True" />
+        <DataGrid x:Name="DataGrid1" Grid.Column="1" Grid.Row="4" Margin="0,10"/>
 
     </Grid>
 </Window>

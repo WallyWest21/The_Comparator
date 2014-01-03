@@ -1,7 +1,13 @@
-﻿Public Class oDrawing
+﻿Imports DRAFTINGITF
+Public Class oDrawing
 
     Public DrawingCode As String
-
+    Public Function RemoveAssemblyRow(ByVal DrawingTable As DrawingTable, ByVal RowIndexOfTable As Integer, ByVal ColumnIndexOfTable As Integer) As Boolean
+        Return False
+        If CInt(Right(DrawingTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable), 3)) / 500 >= 1 Then
+            Return True
+        End If
+    End Function
     Public Class Item
 
         ' Dim Drawig = New Drawing
@@ -36,7 +42,11 @@
         Public Class FlagNotes
         End Class
     End Class
+    Function Clean2DTable(DrawingTable As DrawingTable) As DrawingTable
+        Return DrawingTable
+    End Function
 
+   
 End Class
 
 

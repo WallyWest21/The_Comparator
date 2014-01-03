@@ -7,10 +7,12 @@ Imports DRAFTINGITF
 Imports MECMOD
 Imports PARTITF
 Imports System.Collections.ObjectModel
+Imports INFITF.CATMultiSelectionMode
 'Imports INFITF
 Public Class Comparator
     Dim Validation As New Validation
     Dim comp As New ChildrenList
+
     ''' <summary>
     ''' WalksDown the 3D Tree in CATIA
     ''' </summary>
@@ -19,11 +21,13 @@ Public Class Comparator
     ''' It is a Collection of all the items in 2D
     ''' </summary>
     Public ReadOnly Children2D As New Collection
-    ''' <summary>
-    ''' Returns the real parent of the child of a component
-    ''' </summary>
+
     Public Property Realchildren3D As New ObservableCollection(Of String)
     Public Property Selected3DElements As New ObservableCollection(Of String)
+
+    ''' <summary>
+    ''' Returns the real parent of a component
+    ''' </summary>
     Function RealParent(ByVal oInst) As String
         Dim oParent As Object
         oParent = oInst.parent.parent
@@ -182,7 +186,6 @@ Public Class Comparator
             Exit Sub
         End Try
 
-
         Dim ActiveProductDocument As ProductDocument
 
         Try
@@ -205,8 +208,8 @@ Public Class Comparator
         UserSel.Clear()
 
         Dim e As String
-        e = UserSel.selectelement3(what, "Select a Product or a Component", False, 2, False)
-
+        'e = UserSel.selectelement3(what, "Select a Product or a Component", False, 2, False)
+        e = UserSel.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenSelPerf, False)
 
         Dim SelectedElement As Integer
         Dim SelectedCollection As New Collection
@@ -258,7 +261,7 @@ Public Class Comparator
     End Sub
     Sub Select2D()
 
-        Dim CATIA As Object
+        Dim CATIA As INFITF.Application
         Try
             CATIA = GetObject(, "CATIA.Application")
 
@@ -283,7 +286,7 @@ Public Class Comparator
 
         oXL.DisplayAlerts = False
         oXL.Visible = True
-
+        Dim Dwg As oDrawing = New oDrawing
         'Dim ActiveDrawingDocument 'As DrawingDocument
         'ActiveDwgDocument = CATIA.ActiveDocument
 
@@ -296,15 +299,15 @@ Public Class Comparator
 
         Dim what(0)
         what(0) = "DrawingTable"
-        Dim UserSel2D
+        Dim UserSel2D As INFITF.Selection
         'Dim UserSel As SELECTEDELEMENT
         UserSel2D = CATIA.ActiveDocument.Selection
         UserSel2D.Clear()
 
         'Dim e As catbstr
-        Dim e 'As String
+        Dim e As String
         'e = UserSel2D.selectelement2(what, "Select a Product or a Component", False)
-        e = UserSel2D.selectelement3(what, "Select a Product or a Component", True, 2, False)
+        e = UserSel2D.SelectElement3(what, "Select a Product or a Component", False, 2, True)
         'UserForm1.Show
         'UserForm1.TextBox1 = (UserSel.Item(1).Value.partnumber)
 
@@ -312,10 +315,77 @@ Public Class Comparator
         'UserForm1.Show
         'UserForm1.TextBox1 = (UserSel.Item(1).Value.partnumber)
 
-        Dim actTable
+        Dim MaximumOfColumnsInBigTable As Integer = 0
+        Dim MaximumOfRowsInBigTable As Integer = 0
+
+        Dim SelectedTable As Integer
+        Dim SelectedTableCollection As New Collection '(Of DrawingTable)
+        Dim ActiveTable As DrawingTable
+        For SelectedTable = 1 To UserSel2D.Count
+
+            SelectedTableCollection.Add(UserSel2D.Item(SelectedTable).Value)
+            ' ActiveTable = SelectedTableCollection(SelectedTable)
+
+            'MaximumOfRowsInTable += ActiveTable.NumberOfRows
+            MaximumOfRowsInBigTable += SelectedTableCollection(SelectedTable).NumberOfrows
+        Next
+
+        ' MsgBox(MaximumOfRowsInTable)
+        MaximumOfRowsInBigTable += -1
+        MaximumOfColumnsInBigTable = SelectedTableCollection(1).NumberOfColumns - 1
+
+        Dim Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable) As String
+        Dim RowIndexOfBigTable As Integer = 0
+        Dim ColumnIndexOfTable As Integer = 1
+
+
+        Dim ItemNo = New oDrawing.Item
+        Dim MatSpec = New oDrawing.MatlSpec
+        Dim Nomenclature = New oDrawing.Nomenclature
+        Dim PartNo = New oDrawing.PartNo
+
+        ItemNo.Column = MaximumOfColumnsInBigTable + 1
+        MatSpec.Column = MaximumOfColumnsInBigTable + 1 - 1
+        Nomenclature.Column = MaximumOfColumnsInBigTable + 1 - 2
+        PartNo.Column = MaximumOfColumnsInBigTable + 1 - 3
+
+
+
+        For SelectedTable = SelectedTableCollection.Count To 1 Step -1
+
+
+            For RowIndexOfTable As Integer = 1 To SelectedTableCollection(SelectedTable).NumberOfRows
+                ActiveTable = SelectedTableCollection(SelectedTable)
+
+                ColumnIndexOfTable = 1
+                If (ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable)).Contains("QTY") = True And SelectedTable > 1 Then
+                    Continue For
+                End If
+
+                If ActiveTable.GetCellString(RowIndexOfTable, Nomenclature.Column).Contains("NOMENCLATURE") = True And SelectedTable > 1 Then
+                    Continue For
+                End If
+
+                If Left((ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column)), 2).Contains("-5") = True And SelectedTable > 1 Then
+                    Continue For
+                End If
+
+                For ColumnIndexOfTable = 1 To MaximumOfColumnsInBigTable + 1
+                    Big2DTable(RowIndexOfBigTable, ColumnIndexOfTable - 1) = ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable)
+                Next
+                RowIndexOfBigTable += 1
+            Next
+        Next
+
+
+
+
+
+        Dim actTable As DrawingTable
+
         actTable = UserSel2D.Item(1).Value
 
-        Dim Dwg As oDrawing = New oDrawing
+        ' Dim Dwg As oDrawing = New oDrawing
         Dim NumberOfUsefulCol As Integer
         Dim NumberOfUsefulRows As Integer
         Dim PartNumberCol As Integer
@@ -324,15 +394,15 @@ Public Class Comparator
         QtyCol = 1
 
 
-        Dim ItemNo = New oDrawing.Item
-        Dim MatSpec = New oDrawing.MatlSpec
-        Dim Nomenclature = New oDrawing.Nomenclature
-        Dim PartNo = New oDrawing.PartNo
+        'Dim ItemNo = New oDrawing.Item
+        'Dim MatSpec = New oDrawing.MatlSpec
+        'Dim Nomenclature = New oDrawing.Nomenclature
+        'Dim PartNo = New oDrawing.PartNo
 
-        ItemNo.Column = actTable.NumberOfColumns
-        MatSpec.Column = actTable.NumberOfColumns - 1
-        Nomenclature.Column = actTable.NumberOfColumns - 2
-        PartNo.Column = actTable.NumberOfColumns - 3
+        'ItemNo.Column = actTable.NumberOfColumns
+        'MatSpec.Column = actTable.NumberOfColumns - 1
+        'Nomenclature.Column = actTable.NumberOfColumns - 2
+        'PartNo.Column = actTable.NumberOfColumns - 3
 
         ' The assemblies are between Column 1 and NUmberofCoumns-5
 
@@ -354,28 +424,43 @@ Public Class Comparator
         '    oXL.Cells(i + 13, 8) = actTable.getcellstring(i, MatSpec.Column)
         '    oXL.Cells(i + 13, 9) = actTable.getcellstring(i, ItemNo.Column)
         'Next i
-        For j = 1 To actTable.NumberOfColumns
+        'For j = 1 To actTable.NumberOfColumns
 
-            For i = 1 To actTable.NumberOfrows - 1
-                oXL.Cells(i + 13, j) = actTable.getcellstring(i, j)
+        '    For i = 1 To actTable.NumberOfRows - 1
+        '        oXL.Cells(i + 13, j) = actTable.GetCellString(i, j)
+        '    Next i
+
+        'Next
+
+
+        For j = 0 To MaximumOfColumnsInBigTable
+
+            For i = 0 To MaximumOfRowsInBigTable
+                oXL.ActiveSheet.Cells(i + 13, j + 1) = Big2DTable(i, j)
+                oXL.ActiveSheet.Cells(i + 13, j + 1).wraptext = True
+
+
+                If j = MaximumOfColumnsInBigTable - 3 Then
+                    oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 15
+                End If
+
+                If j = MaximumOfColumnsInBigTable - 2 Then
+                    oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 35
+
+                End If
+
+
             Next i
 
         Next
 
 
-        UserSel2D.Clear()
+        'UserSel2D.Clear()
     End Sub
     Sub Write2DToExcel()
 
     End Sub
-    ''' <summary>
-    ''' Returns the real parent of a component
-    ''' </summary>
-
-
-
-
-
+   
     Sub Is3DPartIn2D()
 
     End Sub
@@ -383,6 +468,9 @@ Public Class Comparator
 
     End Sub
     Sub Is3DQtyEquals2DQty()
+
+    End Sub
+    Sub Is3DNomenclatureSameAs2D()
 
     End Sub
     Public Class ChildrenList1
