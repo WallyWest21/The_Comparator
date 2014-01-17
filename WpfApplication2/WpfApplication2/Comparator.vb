@@ -8,6 +8,9 @@ Imports MECMOD
 Imports PARTITF
 Imports System.Collections.ObjectModel
 Imports INFITF.CATMultiSelectionMode
+Imports System.Windows.Controls
+Imports WpfApplication2
+
 'Imports INFITF
 Public Class Comparator
     Dim Validation As New Validation
@@ -45,9 +48,7 @@ Public Class Comparator
 
         Dim Validation As New Validation
         Dim test As String
-
-
-
+        Dim testobject As String
         Dim oInstances As Products
         oInstances = oInProduct.Products
 
@@ -58,25 +59,30 @@ Public Class Comparator
             Exit Sub
         End If
 
-       
+
         Try
-            Parallel.For(1, oInstances.Count, Sub(k)
+            Parallel.For(1, oInstances.Count + 1, Sub(k)
 
-                                                  Dim oInst As INFITF.AnyObject
-                                                  oInst = oInstances.Item(k)
-                                                  oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)   'apply design mode
+                                                      Dim oInst As INFITF.AnyObject
+                                                      oInst = oInstances.Item(k)
+                                                      oInstances.Item(k).ApplyWorkMode(DESIGN_MODE)   'apply design mode
+                                                      testobject = oInst.partnumber
+                                                      'If Validation.IsComponent(oInst) = False And oInstances.Item(k).Parent.Parent.PartNumber = oInProduct.partnumber Then
+                                                      If Validation.IsComponent(oInst) = False And RealParent(oInst) = oInProduct.partnumber Then
 
-                                                  If Validation.IsComponent(oInst) = False And oInstances.Item(k).Parent.Parent.PartNumber = oInProduct.partnumber Then
-                                                      Children3D.Add(oInst)
-                                                      Realchildren3D.Add(oInst.partnumber)
-                                                      comp.Add(oInst.partnumber)
-                                                  End If
+                                                          Children3D.Add(oInst)
+                                                          Realchildren3D.Add(oInst.partnumber)
+                                                          comp.Add(oInst.partnumber)
 
+                                                      End If
 
-                                                  Call WalkDownTree(oInst)
-                                                  test = RealParent(oInst)
+                                                      If Validation.IsComponent(oInst) = True And RealParent(oInst) = oInProduct.partnumber Then
+                                                          Call WalkDownTree(oInst)
+                                                          test = RealParent(oInst)
 
-                                              End Sub)
+                                                      End If
+
+                                                  End Sub)
 
         Catch ex As Exception
             MsgBox("You need a multicore computer")
@@ -142,25 +148,36 @@ Public Class Comparator
         '    'End If
         'Next i
 
+        '******************************************************************************************
+        Dim Realchildren = From child In Children3D.AsParallel() _
+        Group child By child.partnumber, child.nomenclature Into Group _
+        Select qty = Group.Count, partnumber = partnumber, nomenclature = nomenclature
 
-        Dim Realchildren = From child As Object In Children3D.AsParallel().AsParallel _
-                            Select child.partnumber
-        ' Where child.parent.parent.partnumber = "Product85"
+
+
+        'Dim Realchildren = From child In Children3D.AsParallel()
+        ' Select child.partnumber, child.nomenclature
+        '' Where child.parent.parent.partnumber = "Product85"
 
 
         'oXL.Sheets(1).range("a1").CopyFromRecordset(Realchildren)
         ',child.nomenclature, child.ReferenceProduct.Parent.Name ', child.partnumber
 
         j = 1
-        For i = 0 To Realchildren.Count
+        Dim i As Integer = 1
+        '  For i = 0 To Realchildren.Count
+
+
+        For Each result In Realchildren
 
             'If Realchildren(i).PartNumber = "79A5552" Then
             '    Realchildren(i).Parent.Parent.PartNumber = "HKLHJKHJKHJKHJKH"
             'End If
             'If Realchildren(i).Parent.Name = "B472289-527" Then
-            oXL.Sheets(1).Cells(i + 3, 1).Value = 1
+            oXL.Sheets(1).Cells(i + 3, 1).Value = result.qty
+            oXL.Sheets(1).Cells(i + 3, 2).Value = result.partnumber
+            oXL.Sheets(1).Cells(i + 3, 3).Value = result.nomenclature
 
-            oXL.Sheets(1).Cells(i + 3, 2).Value = Realchildren(i)
             'oXL.Sheets(1).Cells(j + 3, 3).Value = Realchildren(i).Name
             'oXL.Sheets(1).Cells(j + 3, 3).Value = Realchildren(i).ReferenceProduct.Parent.Name
             ''Cells(i + 13, 3).Value = Realchildren(i).Name
@@ -169,7 +186,20 @@ Public Class Comparator
             ' End If
             'j = j + 1
             'End If
-        Next i
+            i += 1
+        Next
+
+
+
+
+
+        'Dim Realchildren = From child As Object In Children3D.AsParallel().AsParallel _
+        '                   Group By child.partnumber Into Group
+        '                    Select partnumber
+
+        ''  For Each kid In Realchildren3D
+        'Console.WriteLine(1)
+        ''Next
 
     End Sub
 
@@ -207,9 +237,11 @@ Public Class Comparator
         UserSel = CATIA.ActiveDocument.Selection
         UserSel.Clear()
 
+
+
         Dim e As String
         'e = UserSel.selectelement3(what, "Select a Product or a Component", False, 2, False)
-        e = UserSel.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenSelPerf, False)
+        e = UserSel.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenSelPerf, True)
 
         Dim SelectedElement As Integer
         Dim SelectedCollection As New Collection
@@ -221,8 +253,6 @@ Public Class Comparator
         Next SelectedElement
 
         UserSel.Clear()
-
-
 
         Dim SelectedProductItem As Integer
 
@@ -275,6 +305,8 @@ Public Class Comparator
         Dim oWB As Excel.Workbook
         Dim oSheet As Excel.Worksheet
 
+
+
         Try
             oXL = GetObject(, "Excel.Application")
             ' oXL.Sheets(1).Cells.Clear()
@@ -284,7 +316,7 @@ Public Class Comparator
 
         End Try
 
-        oXL.DisplayAlerts = False
+        ' oXL.DisplayAlerts = False
         oXL.Visible = True
         Dim Dwg As oDrawing = New oDrawing
      
@@ -297,7 +329,7 @@ Public Class Comparator
         'Dim e As catbstr
         Dim e As String
 
-        e = UserSel2D.SelectElement3(what, "Select a Product or a Component", False, 2, True)
+        e = UserSel2D.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenUserValidatesSelection, True)
   
         Dim MaximumOfColumnsInBigTable As Integer = 0
         Dim MaximumOfRowsInBigTable As Integer = 0
@@ -305,6 +337,7 @@ Public Class Comparator
         Dim SelectedTable As Integer
         Dim SelectedTableCollection As New Collection '(Of DrawingTable)
         Dim ActiveTable As DrawingTable
+
         For SelectedTable = 1 To UserSel2D.Count
 
             SelectedTableCollection.Add(UserSel2D.Item(SelectedTable).Value)
@@ -382,8 +415,6 @@ Public Class Comparator
 
         Next
 
-
-        'UserSel2D.Clear()
     End Sub
     Sub Write2DToExcel()
 

@@ -9,7 +9,7 @@ Imports HybridShapeTypeLib
 Imports ProductStructureTypeLib
 
 'Imports CATInstantCollabItf
-'Imports INFITF
+
 'Imports SPATypeLib
 
 Imports System.Collections
@@ -19,12 +19,21 @@ Imports System.Collections.ObjectModel
 Imports INFITF
 
 Class MainWindow
+
+
+
+
+
+
     Private Sub Label_MouseDown_2(sender As Object, e As MouseButtonEventArgs)
 
         Dim Comparator As New Comparator
         Call Comparator.Select3D()
         ListBox1.ItemsSource = Comparator.Selected3DElements
         DataGrid1.ItemsSource = Comparator.Realchildren3D
+        DataGrid1.DataContext = Comparator.Children3D
+
+        ListBox1.ItemsSource = Comparator.Realchildren3D
 
     End Sub
 
@@ -85,6 +94,11 @@ Class MainWindow
         ListBox1.ItemsSource = comp
 
     End Sub
+
+
+
+
+
 
 
 
