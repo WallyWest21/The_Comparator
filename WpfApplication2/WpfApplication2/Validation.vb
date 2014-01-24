@@ -27,8 +27,16 @@
         IsComponent = False
         Dim Component() As String
 
+        Try
+
+        
+
         Component = Split(oComponent.ReferenceProduct.Parent.Name, ".")
-        'If IsProduct(oComponent) = True Then
+            'If IsProduct(oComponent) = True Then
+        Catch ex As Exception
+            MsgBox("Invalid Part Number")
+        End Try
+
         If oComponent.ReferenceProduct.Name <> Component(0) Then
             IsComponent = True
             'End If

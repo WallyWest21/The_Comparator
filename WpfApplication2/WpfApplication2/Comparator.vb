@@ -27,7 +27,8 @@ Public Class Comparator
 
     Public Property Realchildren3D As New ObservableCollection(Of String)
     Public Property Selected3DElements As New ObservableCollection(Of String)
-
+    Public Property Available2DElements As New ObservableCollection(Of String)
+    Public Property Selected2DElements As New ObservableCollection(Of String)
     ''' <summary>
     ''' Returns the real parent of a component
     ''' </summary>
@@ -116,7 +117,7 @@ Public Class Comparator
             oXL = GetObject(, "Excel.Application")
             ' oXL.Sheets(1).Cells.Clear()
         Catch ex As Exception
-            oXL = New Excel.Application
+            '  oXL = New Excel.Application
 
 
         End Try
@@ -206,6 +207,9 @@ Public Class Comparator
 
     Sub Select3D(Optional ByRef TheRealChildren = "boogie")
 
+
+        'Dim MainWindow As New MainWindow
+
         Dim CATIA As INFITF.Application
 
         Try
@@ -221,7 +225,9 @@ Public Class Comparator
         Try
             ActiveProductDocument = CATIA.ActiveDocument
         Catch ex As Exception
+            'MainWindow.Is3DSelected = False
             MsgBox("Rather than a beep" & vbCrLf & "Or a rude error message:" & vbCrLf & "Open a CATProduct in the active session")
+
 
             Exit Sub
         End Try
@@ -241,7 +247,7 @@ Public Class Comparator
 
         Dim e As String
         'e = UserSel.selectelement3(what, "Select a Product or a Component", False, 2, False)
-        e = UserSel.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenSelPerf, True)
+        e = UserSel.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenUserValidatesSelection, True)
 
         Dim SelectedElement As Integer
         Dim SelectedCollection As New Collection
@@ -260,7 +266,7 @@ Public Class Comparator
 
             Dim oRootProd As Products
             oRootProd = SelectedCollection(SelectedProductItem)
-            MsgBox("This is a CATPart with part number " & oRootProd.PartNumber)
+            'MsgBox("This is a CATPart with part number " & oRootProd.PartNumber)
 
             Call WalkDownTree(oRootProd)
 
@@ -300,7 +306,13 @@ Public Class Comparator
             Exit Sub
         End Try
 
+        Try
+            Dim ActiveDrawingDocument As DrawingDocument = CATIA.ActiveDocument
+        Catch ex As Exception
+            MsgBox("Rather than a beep" & vbCrLf & "Or a rude error message:" & vbCrLf & "Open a CATDrawing in the active session")
 
+            Exit Sub
+        End Try
         Dim oXL As Excel.Application
         Dim oWB As Excel.Workbook
         Dim oSheet As Excel.Worksheet
@@ -319,7 +331,7 @@ Public Class Comparator
         ' oXL.DisplayAlerts = False
         oXL.Visible = True
         Dim Dwg As oDrawing = New oDrawing
-     
+
         Dim what(0)
         what(0) = "DrawingTable"
         Dim UserSel2D As INFITF.Selection
@@ -330,7 +342,7 @@ Public Class Comparator
         Dim e As String
 
         e = UserSel2D.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenUserValidatesSelection, True)
-  
+
         Dim MaximumOfColumnsInBigTable As Integer = 0
         Dim MaximumOfRowsInBigTable As Integer = 0
 
@@ -338,15 +350,24 @@ Public Class Comparator
         Dim SelectedTableCollection As New Collection '(Of DrawingTable)
         Dim ActiveTable As DrawingTable
 
-        For SelectedTable = 1 To UserSel2D.Count
 
-            SelectedTableCollection.Add(UserSel2D.Item(SelectedTable).Value)
-            ' ActiveTable = SelectedTableCollection(SelectedTable)
+        Dim ListBox2D As New ListBox
 
-            'MaximumOfRowsInTable += ActiveTable.NumberOfRows
-            MaximumOfRowsInBigTable += SelectedTableCollection(SelectedTable).NumberOfrows
-        Next
+        Try
 
+
+
+            For SelectedTable = 1 To UserSel2D.Count
+
+                SelectedTableCollection.Add(UserSel2D.Item(SelectedTable).Value)
+                ' ActiveTable = SelectedTableCollection(SelectedTable)
+
+                'MaximumOfRowsInTable += ActiveTable.NumberOfRows
+                MaximumOfRowsInBigTable += SelectedTableCollection(SelectedTable).NumberOfrows
+            Next
+        Catch ex As Exception
+            MsgBox("Make sure you select a proper Drawing Table")
+        End Try
         ' MsgBox(MaximumOfRowsInTable)
         MaximumOfRowsInBigTable += -1
         MaximumOfColumnsInBigTable = SelectedTableCollection(1).NumberOfColumns - 1
@@ -360,13 +381,15 @@ Public Class Comparator
         Dim MatSpec = New oDrawing.MatlSpec
         Dim Nomenclature = New oDrawing.Nomenclature
         Dim PartNo = New oDrawing.PartNo
+        Dim CageCode = New oDrawing.CageCode
 
         ItemNo.Column = MaximumOfColumnsInBigTable + 1
         MatSpec.Column = MaximumOfColumnsInBigTable + 1 - 1
         Nomenclature.Column = MaximumOfColumnsInBigTable + 1 - 2
         PartNo.Column = MaximumOfColumnsInBigTable + 1 - 3
+        CageCode.Column = MaximumOfColumnsInBigTable + 1 - 3
 
-
+        Dwg.Code = "Dummy"
 
         For SelectedTable = SelectedTableCollection.Count To 1 Step -1
 
@@ -384,6 +407,8 @@ Public Class Comparator
                 End If
 
                 If Left((ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column)), 2).Contains("-5") = True And SelectedTable > 1 Then
+                    Dwg.ParentOf2DAssemblies.Add(ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column))
+                    Available2DElements.Add(Dwg.Code & ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column))
                     Continue For
                 End If
 

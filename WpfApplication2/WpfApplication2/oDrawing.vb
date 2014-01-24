@@ -1,7 +1,13 @@
 ﻿Imports DRAFTINGITF
 Public Class oDrawing
 
-    Public DrawingCode As String
+    Public Code As String
+    Public No As String
+    Public Title As String
+    Public Revision As String
+    Public SheetNo As Integer
+    Public SheetCount As Integer
+
     Public ParentOf2DAssemblies As New Collection
     Public Function RemoveAssemblyRow(ByVal DrawingTable As DrawingTable, ByVal RowIndexOfTable As Integer, ByVal ColumnIndexOfTable As Integer) As Boolean
         Return False
@@ -37,6 +43,11 @@ Public Class oDrawing
         ''' </summary>
         Public Description As String
     End Class
+    Public Class CageCode
+        Public Column As Integer
+
+    End Class
+
     Public Class Notes
         Public Class GeneralNotes
         End Class
