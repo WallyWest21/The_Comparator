@@ -43,6 +43,9 @@ Public Class Comparator
         End If
 
     End Function
+    Public Shared MaximumOfColumnsInBigTable As Integer = 0
+    Public Shared MaximumOfRowsInBigTable As Integer = 0
+    Public Shared Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable) As String
 
     Sub WalkDownTree(ByVal oInProduct As Object)
         'As Product)
@@ -313,6 +316,9 @@ Public Class Comparator
 
             Exit Sub
         End Try
+
+
+
         Dim oXL As Excel.Application
         Dim oWB As Excel.Workbook
         Dim oSheet As Excel.Worksheet
@@ -330,6 +336,10 @@ Public Class Comparator
 
         ' oXL.DisplayAlerts = False
         oXL.Visible = True
+
+
+
+
         Dim Dwg As oDrawing = New oDrawing
 
         Dim what(0)
@@ -343,8 +353,12 @@ Public Class Comparator
 
         e = UserSel2D.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenUserValidatesSelection, True)
 
-        Dim MaximumOfColumnsInBigTable As Integer = 0
-        Dim MaximumOfRowsInBigTable As Integer = 0
+        'Dim MaximumOfColumnsInBigTable As Integer = 0
+        'Dim MaximumOfRowsInBigTable As Integer = 0
+
+        'MaximumOfColumnsInBigTable = 0
+        'MaximumOfRowsInBigTable = 0
+
 
         Dim SelectedTable As Integer
         Dim SelectedTableCollection As New Collection '(Of DrawingTable)
@@ -372,7 +386,11 @@ Public Class Comparator
         MaximumOfRowsInBigTable += -1
         MaximumOfColumnsInBigTable = SelectedTableCollection(1).NumberOfColumns - 1
 
-        Dim Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable) As String
+
+        ReDim Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable)
+        ' Dim Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable) As String
+
+
         Dim RowIndexOfBigTable As Integer = 0
         Dim ColumnIndexOfTable As Integer = 1
 
@@ -390,6 +408,9 @@ Public Class Comparator
         CageCode.Column = MaximumOfColumnsInBigTable + 1 - 3
 
         Dwg.Code = "Dummy"
+
+
+
 
         For SelectedTable = SelectedTableCollection.Count To 1 Step -1
 
@@ -419,32 +440,79 @@ Public Class Comparator
             Next
         Next
 
-        For j = 0 To MaximumOfColumnsInBigTable
+        'For j = 0 To MaximumOfColumnsInBigTable
 
-            For i = 0 To MaximumOfRowsInBigTable
-                oXL.ActiveSheet.Cells(i + 13, j + 1) = Big2DTable(i, j)
-                oXL.ActiveSheet.Cells(i + 13, j + 1).wraptext = True
-
-
-                If j = MaximumOfColumnsInBigTable - 3 Then
-                    oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 15
-                End If
-
-                If j = MaximumOfColumnsInBigTable - 2 Then
-                    oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 35
-
-                End If
+        '    For i = 0 To MaximumOfRowsInBigTable
+        '        oXL.ActiveSheet.Cells(i + 13, j + 1) = Big2DTable(i, j)
+        '        oXL.ActiveSheet.Cells(i + 13, j + 1).wraptext = True
 
 
-            Next i
+        '        If j = MaximumOfColumnsInBigTable - 3 Then
+        '            oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 15
+        '        End If
 
+        '        If j = MaximumOfColumnsInBigTable - 2 Then
+        '            oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 35
+
+        '        End If
+
+
+        '    Next i
+
+        'Next
+
+
+        'Call Write2DToExcel(MaximumOfColumnsInBigTable, MaximumOfRowsInBigTable, Big2DTable)
+
+    End Sub
+
+
+    'Sub Write2DToExcel()
+    Sub Write2DToExcel(Selected2DAssy As Integer, Available2DAssy As Integer)
+
+
+        Dim oXL As Excel.Application
+        Dim oWB As Excel.Workbook
+        'Dim oSheet As Excel.Worksheet
+
+
+
+        Try
+            oXL = GetObject(, "Excel.Application")
+            ' oXL.Sheets(1).Cells.Clear()
+        Catch ex As Exception
+            oXL = New Excel.Application
+
+
+        End Try
+
+        ' oXL.DisplayAlerts = False
+        oXL.Visible = True
+        '  Dim Selected2DAssy As Integer
+
+        For j As Integer = Selected2DAssy To MaximumOfColumnsInBigTable
+
+            If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy Then
+
+                For i As Integer = 0 To MaximumOfRowsInBigTable
+                    oXL.ActiveSheet.Cells(i + 13, j + 1) = Big2DTable(i, j)
+                    oXL.ActiveSheet.Cells(i + 13, j + 1).wraptext = True
+
+
+                    If j = MaximumOfColumnsInBigTable - 3 Then
+                        oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 15
+                    End If
+
+                    If j = MaximumOfColumnsInBigTable - 2 Then
+                        oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 35
+
+                    End If
+
+                Next i
+            End If
         Next
-
     End Sub
-    Sub Write2DToExcel()
 
-    End Sub
-   
     Sub Is3DPartIn2D()
 
     End Sub

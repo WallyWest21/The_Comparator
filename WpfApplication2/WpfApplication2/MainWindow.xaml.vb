@@ -25,6 +25,10 @@ Public Class MainWindow
     Public Is3DSelected As Boolean
 
 
+    'Public Shared MaximumOfColumnsInBigTable As Integer = 0
+    'Public Shared MaximumOfRowsInBigTable As Integer = 0
+    'Public Shared Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable) As String
+
 
     Private Sub Label_MouseDown_2(sender As Object, e As MouseButtonEventArgs)
 
@@ -71,17 +75,17 @@ Public Class MainWindow
     End Sub
 
     Private Sub HTMLLabel_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles HTMLLabel.MouseDown
-        Dim comp As ChildrenList
-        Dim comparator As Comparator
+        'Dim comp As ChildrenList
+        'Dim comparator As Comparator
 
 
-        '    lst1.Add("New Item")
+        ''    lst1.Add("New Item")
 
-        'ListBox1.ItemsSource = ChildrenList.
-        ' comp.Add("456")
-        ' comp.Add(comparator.Realchildren3D(1))
+        ''ListBox1.ItemsSource = ChildrenList.
+        '' comp.Add("456")
+        '' comp.Add(comparator.Realchildren3D(1))
 
-        ListBox3D.ItemsSource = comp
+        'ListBox3D.ItemsSource = comp
 
     End Sub
     Public Sub SelectionEvents(UIElements As Object, IsSelected As Boolean)
@@ -97,12 +101,6 @@ Public Class MainWindow
             UIElements.BorderBrush = _2DLabel.Background
         End If
     End Sub
-
-
-
-
-
-
 
     Private Sub Label_Drop(sender As Object, e As DragEventArgs)
 
@@ -145,7 +143,7 @@ Public Class MainWindow
 
     Private Sub _2DLabel_MouseRightButtonDown(sender As Object, e As MouseButtonEventArgs) Handles _2DLabel.MouseRightButtonDown
         Is2DSelected = False
-        Call SelectionEvents(_2DLabel, Is2DSelected)
+        SelectionEvents(_2DLabel, Is2DSelected)
         ListBox2D.ItemsSource = Nothing
         ListBox2D.Items.Clear()
         '  ListBox2D.Items.Remove(ListBox2D.SelectedIndex)
@@ -156,16 +154,30 @@ Public Class MainWindow
     Private Sub _2DLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles _2DLabel.MouseLeftButtonDown
         Is2DSelected = True
 
-
-        Call SelectionEvents(_2DLabel, Is2DSelected)
+        SelectionEvents(_2DLabel, Is2DSelected)
         Dim Comparator As New Comparator
-        Call Comparator.Select2D()
+        Comparator.Select2D()
+
         ListBox2D.ItemsSource = Comparator.Available2DElements
+
+        ' Await Task.Delay(30000)
+
+
+        ' Is2DSelected = False
+        'SelectionEvents(_2DLabel, Is2DSelected)
+
+        Exit Sub
     End Sub
 
     Public Sub _3DLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles _3DLabel.MouseLeftButtonDown
 
         Is3DSelected = True
+
+        'For counter = 0 To 155 Step 0.001
+
+        '    Grid1.RowDefinitions(4).Height = New GridLength(counter)
+
+        'Next
 
         Call SelectionEvents(_3DLabel, Is3DSelected)
 
@@ -176,6 +188,7 @@ Public Class MainWindow
         ListBox3D.ItemsSource = Comparator.Selected3DElements
         DataGrid1.ItemsSource = Comparator.Realchildren3D
         DataGrid1.DataContext = Comparator.Children3D
+        ListBox3D.SelectAll()
 
         ' ListBox1.ItemsSource = Comparator.Realchildren3D
     End Sub
@@ -188,10 +201,12 @@ Public Class MainWindow
     End Sub
 
     Private Sub Image_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+        Dim Comparator As New Comparator
         For Each item In ListBox2D.SelectedItems
             MsgBox(item.ToString())
 
         Next
-        
+        MsgBox(ListBox2D.Items.Count)
+        Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
     End Sub
 End Class

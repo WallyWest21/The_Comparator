@@ -7,7 +7,7 @@
     <Window.Resources>
         <c:ChildrenList x:Key="ChildrenlistData"/>
     </Window.Resources>
-    <Grid>
+    <Grid x:Name="Grid1">
         <Grid.RowDefinitions>
             <RowDefinition Height="101*"/>
             <RowDefinition Height="155*"/>
@@ -26,10 +26,37 @@
             VerticalContentAlignment="Center" 
             Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="1" Grid.Column="1" BorderThickness="0"
          />
-        <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2"/>
-        <Label Content="XL" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="Gray" FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" Grid.Row="1" IsEnabled="False" Opacity="0.5" Grid.Column="2" Grid.ColumnSpan="2"/>
-        <Label Content="2D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF643EBF" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="3" Grid.Column="1"/>
+        <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Left" Height="150" VerticalAlignment="Center"  Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2"/>
+        <Label
+            Name="XLLabel" Content="XL" 
+            HorizontalAlignment="Left" Height="150" VerticalAlignment="Center" Width="150" Background="Gray" 
+            FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" 
+            Grid.Row="1" IsEnabled="False" Opacity="0.5" Grid.Column="2" Grid.ColumnSpan="2">
+            
+            <Label.Triggers>
+                <EventTrigger RoutedEvent ="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                    Storyboard.TargetName="XLLabel" 
+                                    Storyboard.TargetProperty="Width"
+                                    From="1" To="150" Duration="0:0:1" 
+                                    AccelerationRatio="0.05" DecelerationRatio="0.95"
+                                    AutoReverse="true" RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Label.Triggers>
+        </Label>
+
+
+
+
+        <Label x:Name="_2DOutputLabel" Content="2D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF643EBF" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="3" Grid.Column="1"/>
         <Label x:Name="HTMLLabel" Content="&lt;/&gt;" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="3"/>
+        
+        
+        
         <Label Content="XL" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF00A600" FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2">
             <Label.Effect>
                 <DropShadowEffect />
@@ -46,7 +73,9 @@
                  Grid.Row="2"  Grid.Column="1" Width="150" Height="150" 
                  Background="#FFDC572E" Margin="5" Foreground="#FFFDFBFB" FontSize="14" 
                  ItemsSource="{Binding Source={StaticResource ChildrenlistData}}" IsSynchronizedWithCurrentItem="True"
-                 SelectionMode="Multiple" />
+                 SelectionMode="Multiple"
+                 
+            />
         <Image Grid.Column="1" HorizontalAlignment="Center" Height="150" Margin="0" Grid.Row="4" VerticalAlignment="Center" Width="150" Focusable="True" Source="The ComparatorIcon.jpg" MouseLeftButtonDown="Image_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5">
             <Image.Effect>
                 <DropShadowEffect/>
@@ -54,4 +83,8 @@
         </Image>
 
     </Grid>
+
+   
+
 </Window>
+
