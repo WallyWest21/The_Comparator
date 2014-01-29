@@ -9,17 +9,18 @@
     </Window.Resources>
     <Grid x:Name="Grid1">
         <Grid.RowDefinitions>
-            <RowDefinition Height="101*"/>
-            <RowDefinition Height="155*"/>
-            <RowDefinition Height="155*"/>
-            <RowDefinition Height="155*"/>
-            <RowDefinition Height="155*"/>
+            <RowDefinition Name="Title" Height="101*"/>
+            <RowDefinition Name ="Inputs" Height="155*"/>
+            <RowDefinition Name ="InputsResults" Height="155*"/>
+            <RowDefinition Name ="Output" Height="155*"/>
+            <RowDefinition Name ="Launch" Height="0*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="155*"/>
             <ColumnDefinition Width="155*"/>
             <ColumnDefinition Width="155*"/>
         </Grid.ColumnDefinitions>
+        
         <Label 
             x:Name="_2DLabel" Content="2D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF643EBF" 
             HorizontalContentAlignment="Center" 
@@ -27,22 +28,24 @@
             Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="1" Grid.Column="1" BorderThickness="0"
          />
         <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Left" Height="150" VerticalAlignment="Center"  Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2"/>
-        <Label
-            Name="XLLabel" Content="XL" 
+       
+        
+        <Label Name="XLLabel" 
+               Content="XL" 
             HorizontalAlignment="Left" Height="150" VerticalAlignment="Center" Width="150" Background="Gray" 
             FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" 
-            Grid.Row="1" IsEnabled="False" Opacity="0.5" Grid.Column="2" Grid.ColumnSpan="2">
-            
+            Grid.Row="1" Opacity="0.5" Grid.Column="2" Grid.ColumnSpan="2">
+
             <Label.Triggers>
-                <EventTrigger RoutedEvent ="Loaded">
+                <EventTrigger RoutedEvent="Mouse.MouseEnter">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation
-                                    Storyboard.TargetName="XLLabel" 
-                                    Storyboard.TargetProperty="Width"
-                                    From="1" To="150" Duration="0:0:1" 
-                                    AccelerationRatio="0.05" DecelerationRatio="0.95"
-                                    AutoReverse="true" RepeatBehavior="Forever" />
+                            <DoubleAnimation AutoReverse="False" 
+                            Duration="0:0:2"
+                            From="802.463"
+                            Storyboard.TargetName="Grid1"
+                            Storyboard.TargetProperty="(Height)"
+                            To="700" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
@@ -54,9 +57,7 @@
 
         <Label x:Name="_2DOutputLabel" Content="2D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF643EBF" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="3" Grid.Column="1"/>
         <Label x:Name="HTMLLabel" Content="&lt;/&gt;" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="3"/>
-        
-        
-        
+               
         <Label Content="XL" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF00A600" FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2">
             <Label.Effect>
                 <DropShadowEffect />
@@ -81,6 +82,24 @@
                 <DropShadowEffect/>
             </Image.Effect>
         </Image>
+
+        <!--<Grid.Triggers>
+            <EventTrigger RoutedEvent ="Mouse.MouseEnter" SourceName="XLLabel">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation
+                                    Storyboard.TargetName="_2DLabel" 
+                                    Storyboard.TargetProperty="Width"
+                                    From="1" To="150" Duration="0:0:1" 
+                                    AccelerationRatio="0.05" DecelerationRatio="0.95"
+                                    AutoReverse="true" RepeatBehavior="Forever" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Grid.Triggers>-->
+
+
+       
 
     </Grid>
 

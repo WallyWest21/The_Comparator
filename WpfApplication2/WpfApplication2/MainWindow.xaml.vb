@@ -12,9 +12,9 @@ Imports ProductStructureTypeLib
 
 'Imports SPATypeLib
 
-Imports System.Collections
+'Imports System.Collections
 
-Imports System
+'Imports System
 Imports System.Collections.ObjectModel
 Imports INFITF
 
@@ -208,5 +208,9 @@ Public Class MainWindow
         Next
         MsgBox(ListBox2D.Items.Count)
         Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+    End Sub
+
+    Private Sub MainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+
     End Sub
 End Class
