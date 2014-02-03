@@ -178,9 +178,9 @@ Public Class Comparator
             '    Realchildren(i).Parent.Parent.PartNumber = "HKLHJKHJKHJKHJKH"
             'End If
             'If Realchildren(i).Parent.Name = "B472289-527" Then
-            oXL.Sheets(1).Cells(i + 3, 1).Value = result.qty
-            oXL.Sheets(1).Cells(i + 3, 2).Value = result.partnumber
-            oXL.Sheets(1).Cells(i + 3, 3).Value = result.nomenclature
+            oXL.ActiveSheet.Cells(i + 13, 1).Value = result.qty
+            oXL.ActiveSheet.Cells(i + 13, 2).Value = result.partnumber
+            oXL.ActiveSheet.Cells(i + 13, 3).Value = result.nomenclature
 
             'oXL.Sheets(1).Cells(j + 3, 3).Value = Realchildren(i).Name
             'oXL.Sheets(1).Cells(j + 3, 3).Value = Realchildren(i).ReferenceProduct.Parent.Name
@@ -472,9 +472,12 @@ Public Class Comparator
 
 
         Dim oXL As Excel.Application
-        Dim oWB As Excel.Workbook
-        'Dim oSheet As Excel.Worksheet
 
+        'Dim oWB As Excel.Workbook
+        'oWB = oXL.ActiveWorkbook
+
+        'Dim oSheet As Excel.Worksheet
+        ' oSheet = oWB.ActiveSheet
 
 
         Try
@@ -489,28 +492,35 @@ Public Class Comparator
         ' oXL.DisplayAlerts = False
         oXL.Visible = True
         '  Dim Selected2DAssy As Integer
-
+        Dim XLColumn As Integer = 5
+        Dim i As Integer = 0
         For j As Integer = Selected2DAssy To MaximumOfColumnsInBigTable
 
             If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy Then
 
-                For i As Integer = 0 To MaximumOfRowsInBigTable
-                    oXL.ActiveSheet.Cells(i + 13, j + 1) = Big2DTable(i, j)
-                    oXL.ActiveSheet.Cells(i + 13, j + 1).wraptext = True
+
+                For i = 0 To MaximumOfRowsInBigTable
+
+
+                    oXL.ActiveSheet.Cells(i + 14, XLColumn) = Big2DTable(i, j)
+                    oXL.ActiveSheet.Cells(i + 14, XLColumn).wraptext = True
 
 
                     If j = MaximumOfColumnsInBigTable - 3 Then
-                        oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 15
+                        oXL.ActiveSheet.Cells(i + 14, XLColumn).columnwidth = 15
                     End If
 
                     If j = MaximumOfColumnsInBigTable - 2 Then
-                        oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 35
+                        oXL.ActiveSheet.Cells(i + 14, XLColumn).columnwidth = 35
 
                     End If
 
                 Next i
+
+                XLColumn = XLColumn + 1
             End If
-        Next
+
+        Next j
     End Sub
 
     Sub Is3DPartIn2D()

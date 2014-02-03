@@ -17,9 +17,41 @@ Imports ProductStructureTypeLib
 'Imports System
 Imports System.Collections.ObjectModel
 Imports INFITF
+Imports System.Windows.Media.Animation
 
 Public Class MainWindow
 
+
+    Private myStoryboard As Storyboard
+
+    'Public Sub New()
+
+    '    ' This call is required by the designer.
+    '    InitializeComponent()
+    '    '*******************Animation*************************
+
+    '    Dim myDoubleAnimation As New DoubleAnimation()
+
+    '    myDoubleAnimation.From = ComparatorWindow.Height
+    '    myDoubleAnimation.To = ComparatorWindow.Height + 150
+    '    myDoubleAnimation.Duration = New Duration(TimeSpan.FromSeconds(5))
+    '    myDoubleAnimation.AutoReverse = False
+    '    myDoubleAnimation.RepeatBehavior = RepeatBehavior.Forever
+
+    '    myStoryboard = New Storyboard()
+    '    myStoryboard.Children.Add(myDoubleAnimation)
+    '    Storyboard.SetTargetName(myDoubleAnimation, ComparatorWindow.Name)
+    '    Storyboard.SetTargetProperty(myDoubleAnimation, New PropertyPath(Grid1.Height))
+
+    '    AddHandler ComparatorWindow.Loaded, AddressOf ComparatorWindow_Loaded
+    '    Me.Content = ComparatorWindow
+
+
+
+    '    '*******************Animation*************************
+    '    ' Add any initialization after the InitializeComponent() call.
+
+    'End Sub
 
     Public Is2DSelected As Boolean
     Public Is3DSelected As Boolean
@@ -28,6 +60,8 @@ Public Class MainWindow
     'Public Shared MaximumOfColumnsInBigTable As Integer = 0
     'Public Shared MaximumOfRowsInBigTable As Integer = 0
     'Public Shared Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable) As String
+
+
 
 
     Private Sub Label_MouseDown_2(sender As Object, e As MouseButtonEventArgs)
@@ -73,7 +107,6 @@ Public Class MainWindow
     'End Sub
     Private Sub HTML_Label_MouseDown(sender As Object, e As MouseButtonEventArgs)
     End Sub
-
     Private Sub HTMLLabel_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles HTMLLabel.MouseDown
         'Dim comp As ChildrenList
         'Dim comparator As Comparator
@@ -101,7 +134,6 @@ Public Class MainWindow
             UIElements.BorderBrush = _2DLabel.Background
         End If
     End Sub
-
     Private Sub Label_Drop(sender As Object, e As DragEventArgs)
 
         'Dim theFiles() As String = CType(e.Data.GetData("FileDrop", True), String())
@@ -138,9 +170,6 @@ Public Class MainWindow
         'Next
 
     End Sub
-
-
-
     Private Sub _2DLabel_MouseRightButtonDown(sender As Object, e As MouseButtonEventArgs) Handles _2DLabel.MouseRightButtonDown
         Is2DSelected = False
         SelectionEvents(_2DLabel, Is2DSelected)
@@ -150,7 +179,6 @@ Public Class MainWindow
         ' ListBox2D.Items.Refresh()
 
     End Sub
-
     Private Sub _2DLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles _2DLabel.MouseLeftButtonDown
         Is2DSelected = True
 
@@ -168,7 +196,6 @@ Public Class MainWindow
 
         Exit Sub
     End Sub
-
     Public Sub _3DLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles _3DLabel.MouseLeftButtonDown
 
         Is3DSelected = True
@@ -185,32 +212,53 @@ Public Class MainWindow
         Call Comparator.Select3D()
         Call SelectionEvents(_3DLabel, Is3DSelected)
 
+
+
+        'myStoryboard.Begin(Me)
+
+
+
         ListBox3D.ItemsSource = Comparator.Selected3DElements
         DataGrid1.ItemsSource = Comparator.Realchildren3D
         DataGrid1.DataContext = Comparator.Children3D
         ListBox3D.SelectAll()
 
+
+
+
+
+
+
+
+
         ' ListBox1.ItemsSource = Comparator.Realchildren3D
     End Sub
-
     Private Sub _3DLabel_MouseRightButtonDown(sender As Object, e As MouseButtonEventArgs) Handles _3DLabel.MouseRightButtonDown
         Is3DSelected = False
         Call SelectionEvents(_3DLabel, Is2DSelected)
         ListBox3D.ItemsSource = Nothing
         ListBox3D.Items.Clear()
     End Sub
-
     Private Sub Image_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         Dim Comparator As New Comparator
+
         For Each item In ListBox2D.SelectedItems
             MsgBox(item.ToString())
-
         Next
+
         MsgBox(ListBox2D.Items.Count)
+
         Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
     End Sub
+    Private Sub XLLabelOutput_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles XLLabelOutput.MouseLeftButtonDown
+        Dim Comparator As New Comparator
+        Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+    End Sub
+    Private Sub ComparatorWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles ComparatorWindow.Loaded
 
-    Private Sub MainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-
+        'For row As Integer = 4 To 2 Step -1
+        '    Grid1.RowDefinitions(row).Height = New GridLength(0, GridUnitType.Star)
+        'Next
+        'ComparatorWindow.Height = 335
     End Sub
 End Class
