@@ -7,11 +7,11 @@
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:c="clr-namespace:WpfApplication2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="ComparatorWindow" mc:Ignorable="d" x:Class="MainWindow"
-    Title="The Comparator" Height="592.463" Width="481.642" Background="#FF001940" KeyDown="Window_KeyDown" ResizeMode="CanResizeWithGrip" WindowStyle="ThreeDBorderWindow">
+    Title="The Comparator" Height="592.463" Width="465" Background="#FF001940" KeyDown="Window_KeyDown" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <Window.Resources>
-        
 
-                <c:ChildrenList x:Key="ChildrenlistData"/>
+
+        <c:ChildrenList x:Key="ChildrenlistData"/>
     </Window.Resources>
     <Controls:MetroWindow.Effect>
         <DropShadowEffect/>
@@ -19,9 +19,9 @@
 
     <Controls:MetroWindow.WindowCommands>
         <Controls:WindowCommands>
-            <Button Content="settings" />
-            <Button>
-                <StackPanel Orientation="Horizontal">
+            <!--<Button Content="settings" />-->
+            <!--<Button>
+                <StackPanel Orientation="Horizontal">-->
                     <!--<Rectangle Width="20" Height="20">
                         <Rectangle.Resources>
                             <SolidColorBrush x:Key="BlackBrush" Color="White" />
@@ -30,18 +30,25 @@
                             <VisualBrush Stretch="Fill"  />
                         </Rectangle.Fill>
                     </Rectangle>-->
-                    
-                    <Image 
+
+                    <!--<Image 
                         Width="20"
-                        Source= "Images/EmailIcon100.png"/>
-                        
-                    <TextBlock Text="feedback" 
+                        Source= "The ComparatorIcon.jpg"/>-->
+
+
+                    <Button 
+                        Name="Feedback" ToolTip="Feedback"
+                        Content="&#x1f4e7;" FontFamily="Segoe UI Symbol" FontSize="20" VerticalContentAlignment="Center" Width="Auto"/>
+                    <Button 
+                        Name="Settings" ToolTip="Settings"
+                        Content="&#xe26e;" FontFamily="Segoe UI Symbol" FontSize="20" VerticalContentAlignment="Center"  Width="Auto"/>
+                    <!--<TextBlock Text="feedback" 
                                HorizontalAlignment="Right" 
                                VerticalAlignment="Center" 
                                Foreground="White" 
-                               />
-                </StackPanel>
-            </Button>
+                               />-->
+                <!--</StackPanel>
+            </Button>-->
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>
 
@@ -66,8 +73,8 @@
             Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="1" Grid.Column="1" BorderThickness="0"
          />
         <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center"  Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2" Margin="0"/>
-       
-        
+
+
         <Label Name="XLLabel" 
                Content="XL" 
             HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF00A600" 
@@ -84,7 +91,7 @@
                             Storyboard.TargetName="ComparatorWindow"
                             Storyboard.TargetProperty="(Height)"
                             To="490" />
-                            
+
                             <!--<DoubleAnimation AutoReverse="False" 
                             Duration="0:0:2"
                             From="0"
@@ -99,11 +106,9 @@
         </Label>
 
 
-
-
         <Label x:Name="_2DOutputLabel" Content="2D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF643EBF" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="3" Grid.Column="1"/>
         <Label x:Name="HTMLLabel" Content="&lt;/&gt;" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="3"/>
-               
+
         <Label x:Name="XLLabelOutput" Content="XL" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF00A600" FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2">
             <Label.Effect>
                 <DropShadowEffect />
@@ -128,6 +133,8 @@
                 <DropShadowEffect/>
             </Image.Effect>
         </Image>
+        
+       
 
         <!--<Grid.Triggers>
             <EventTrigger RoutedEvent ="Mouse.MouseEnter" SourceName="XLLabel">
@@ -145,11 +152,11 @@
         </Grid.Triggers>-->
 
 
-       
+
 
     </Grid>
 
-   
+
 
 </Controls:MetroWindow>
 
