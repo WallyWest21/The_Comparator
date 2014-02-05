@@ -319,23 +319,23 @@ Public Class Comparator
 
 
 
-        Dim oXL As Excel.Application
-        Dim oWB As Excel.Workbook
-        Dim oSheet As Excel.Worksheet
+        'Dim oXL As Excel.Application
+        'Dim oWB As Excel.Workbook
+        'Dim oSheet As Excel.Worksheet
 
 
 
-        Try
-            oXL = GetObject(, "Excel.Application")
-            ' oXL.Sheets(1).Cells.Clear()
-        Catch ex As Exception
-            oXL = New Excel.Application
+        'Try
+        '    oXL = GetObject(, "Excel.Application")
+        '    ' oXL.Sheets(1).Cells.Clear()
+        'Catch ex As Exception
+        '    oXL = New Excel.Application
 
 
-        End Try
+        'End Try
 
-        ' oXL.DisplayAlerts = False
-        oXL.Visible = True
+        '' oXL.DisplayAlerts = False
+        'oXL.Visible = True
 
 
 
@@ -407,7 +407,7 @@ Public Class Comparator
         PartNo.Column = MaximumOfColumnsInBigTable + 1 - 3
         CageCode.Column = MaximumOfColumnsInBigTable + 1 - 3
 
-        Dwg.Code = "Dummy"
+        Dwg.Number = "Dummy"
 
 
 
@@ -427,14 +427,23 @@ Public Class Comparator
                     Continue For
                 End If
 
-                If Left((ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column)), 2).Contains("-5") = True And SelectedTable > 1 Then
-                    Dwg.ParentOf2DAssemblies.Add(ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column))
-                    Available2DElements.Add(Dwg.Code & ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column))
+                'If Left((ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column)), 2).Contains("-5") = True And SelectedTable > 1 Then
+                If Dwg.IsAssembliesColumnSelected(ActiveTable, RowIndexOfTable, PartNo.Column, SelectedTable) = True Then
+
+                    'Dwg.ParentOf2DAssemblies.Add(ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column))
+                    'Available2DElements.Add(Dwg.Number & ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column))
                     Continue For
                 End If
-
+                'If Dwg.IsAssemblyRowSelected(ActiveTable, RowIndexOfTable, PartNo.Column, SelectedTable) = False Then
+                '    MsgBox("Nothing")
+                'End If
                 For ColumnIndexOfTable = 1 To MaximumOfColumnsInBigTable + 1
                     Big2DTable(RowIndexOfBigTable, ColumnIndexOfTable - 1) = ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable)
+                    If ColumnIndexOfTable < CageCode.Column And Dwg.IsAssembliesColumnSelected(ActiveTable, RowIndexOfTable, ColumnIndexOfTable, SelectedTable) = True Then
+                        Dwg.ParentOf2DAssemblies.Add(ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable))
+                        Available2DElements.Add(Dwg.Number & ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable))
+                    End If
+
                 Next
                 RowIndexOfBigTable += 1
             Next
@@ -484,43 +493,74 @@ Public Class Comparator
             oXL = GetObject(, "Excel.Application")
             ' oXL.Sheets(1).Cells.Clear()
         Catch ex As Exception
-            oXL = New Excel.Application
+            oXL = CreateObject("Excel.Application")
 
 
         End Try
 
-        ' oXL.DisplayAlerts = False
+        oXL.DisplayAlerts = False
         oXL.Visible = True
         '  Dim Selected2DAssy As Integer
         Dim XLColumn As Integer = 5
+        Dim XLRow As Integer = 13
         Dim i As Integer = 0
-        For j As Integer = Selected2DAssy To MaximumOfColumnsInBigTable
+        Dim j As Integer = Selected2DAssy
 
-            If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy Then
+        Dim Dwg As oDrawing
+        Dim Nomenclature As New oDrawing.Nomenclature
+        Nomenclature.Column = MaximumOfColumnsInBigTable - 2
 
 
-                For i = 0 To MaximumOfRowsInBigTable
 
 
-                    oXL.ActiveSheet.Cells(i + 14, XLColumn) = Big2DTable(i, j)
-                    oXL.ActiveSheet.Cells(i + 14, XLColumn).wraptext = True
+        For i = 0 To MaximumOfRowsInBigTable
+
+
+            XLColumn = 5
+            For j = Selected2DAssy To MaximumOfColumnsInBigTable
+                If String.IsNullOrEmpty(Big2DTable(i, j)) And j = Selected2DAssy Then
+                    GoTo GetMeOuttaHere
+                    XLRow = XLRow - 1
+                Else
+
+                End If
+
+
+                If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy + 1 Then
+
+
+
+                    If (Big2DTable(i, j)).Contains("QTY") = True Then
+                        Continue For
+                    End If
+
+                    If Big2DTable(i, Nomenclature.Column).Contains("NOMENCLATURE") = True Then
+                        Continue For
+                    End If
+
+
+
+                    oXL.ActiveSheet.Cells(XLRow, XLColumn) = Big2DTable(i, j)
+                    oXL.ActiveSheet.Cells(XLRow, XLColumn).wraptext = True
 
 
                     If j = MaximumOfColumnsInBigTable - 3 Then
-                        oXL.ActiveSheet.Cells(i + 14, XLColumn).columnwidth = 15
+                        oXL.ActiveSheet.Cells(XLRow, XLColumn).columnwidth = 15
                     End If
 
                     If j = MaximumOfColumnsInBigTable - 2 Then
-                        oXL.ActiveSheet.Cells(i + 14, XLColumn).columnwidth = 35
+                        oXL.ActiveSheet.Cells(XLRow, XLColumn).columnwidth = 35
 
                     End If
+                    XLColumn = XLColumn + 1
+                End If
+            Next j
 
-                Next i
+            XLRow = XLRow + 1
+GetMeOuttaHere:
+        Next
 
-                XLColumn = XLColumn + 1
-            End If
-
-        Next j
+        oXL.DisplayAlerts = True
     End Sub
 
     Sub Is3DPartIn2D()

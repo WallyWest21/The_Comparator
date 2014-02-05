@@ -7,19 +7,51 @@
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:c="clr-namespace:WpfApplication2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="ComparatorWindow" mc:Ignorable="d" x:Class="MainWindow"
-    Title="The Comparator" Height="802.463" Width="481.642" Background="#FF001940" KeyDown="Window_KeyDown" ResizeMode="CanResizeWithGrip" WindowStyle="ThreeDBorderWindow">
+    Title="The Comparator" Height="592.463" Width="481.642" Background="#FF001940" KeyDown="Window_KeyDown" ResizeMode="CanResizeWithGrip" WindowStyle="ThreeDBorderWindow">
     <Window.Resources>
-              
         
-        <c:ChildrenList x:Key="ChildrenlistData"/>
+
+                <c:ChildrenList x:Key="ChildrenlistData"/>
     </Window.Resources>
+    <Controls:MetroWindow.Effect>
+        <DropShadowEffect/>
+    </Controls:MetroWindow.Effect>
+
+    <Controls:MetroWindow.WindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="settings" />
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <!--<Rectangle Width="20" Height="20">
+                        <Rectangle.Resources>
+                            <SolidColorBrush x:Key="BlackBrush" Color="White" />
+                        </Rectangle.Resources>
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill"  />
+                        </Rectangle.Fill>
+                    </Rectangle>-->
+                    
+                    <Image 
+                        Width="20"
+                        Source= "Images/EmailIcon100.png"/>
+                        
+                    <TextBlock Text="feedback" 
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Center" 
+                               Foreground="White" 
+                               />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.WindowCommands>
+
     <Grid x:Name="Grid1">
         <Grid.RowDefinitions>
             <RowDefinition Name="Title" Height="101*"/>
             <RowDefinition Name ="Inputs" Height="155*"/>
             <RowDefinition Name ="InputsResults" Height="155*"/>
             <RowDefinition Name ="Output" Height="155*"/>
-            <RowDefinition Name ="Launch" Height="155*"/>
+            <RowDefinition Name ="Launch" Height="0*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="155*"/>
@@ -33,12 +65,12 @@
             VerticalContentAlignment="Center" 
             Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="1" Grid.Column="1" BorderThickness="0"
          />
-        <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Left" Height="150" VerticalAlignment="Center"  Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2"/>
+        <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center"  Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2" Margin="0"/>
        
         
         <Label Name="XLLabel" 
                Content="XL" 
-            HorizontalAlignment="Left" Height="150" VerticalAlignment="Center" Width="150" Background="#FF00A600" 
+            HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF00A600" 
             FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" 
             Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
 
@@ -86,9 +118,9 @@
         <DataGrid x:Name="DataGrid1" Grid.Row="4" Margin="20,10,10,107" Grid.ColumnSpan="3" IsSynchronizedWithCurrentItem="True" Visibility="Hidden"/>
         <ListBox x:Name="ListBox2D" 
                  Grid.Row="2"  Grid.Column="1" Width="150" Height="150" 
-                 Background="#FFDC572E" Margin="5" Foreground="#FFFDFBFB" FontSize="14" 
+                 Background="#FFDC572E" Margin="0" Foreground="#FFFDFBFB" FontSize="14" 
                  ItemsSource="{Binding Source={StaticResource ChildrenlistData}}" IsSynchronizedWithCurrentItem="True"
-                 SelectionMode="Single"
+                 SelectionMode="Single" HorizontalAlignment="Center" VerticalAlignment="Center"
                  
             />
         <Image Grid.Column="1" HorizontalAlignment="Center" Height="150" Margin="0" Grid.Row="4" VerticalAlignment="Center" Width="150" Focusable="True" Source="The ComparatorIcon.jpg" MouseLeftButtonDown="Image_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5">

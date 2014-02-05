@@ -8,9 +8,13 @@ Public Class oDrawing
     Public SheetNo As Integer
     Public SheetCount As Integer
     Public Quantity As Integer
+    Public Number As String
+    Public QtyReqdRows(,) As Integer
+    Public FirstRowofItems(,) As Integer
+
 
     Public ParentOf2DAssemblies As New Collection
-    Public Function RemoveAssemblyRow(ByVal DrawingTable As DrawingTable, ByVal RowIndexOfTable As Integer, ByVal ColumnIndexOfTable As Integer) As Boolean
+    Public Function RemoveAssembliesRow(ByVal DrawingTable As DrawingTable, ByVal RowIndexOfTable As Integer, ByVal ColumnIndexOfTable As Integer) As Boolean
         Return False
         If CInt(Right(DrawingTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable), 3)) / 500 >= 1 Then
             Return True
@@ -25,6 +29,39 @@ Public Class oDrawing
     Public Sub RemoveEmptyItems(MaximumOfRowsInBigTable As Integer, MaximumOfColumnsInBigTable As Integer, IsEnabled As Boolean)
 
     End Sub
+    Public Sub RemoveQtyReqdRow(MaximumOfRowsInBigTable As Integer, MaximumOfColumnsInBigTable As Integer, IsEnabled As Boolean)
+
+    End Sub
+    Public Sub RemoveAssembliesColumns(MaximumOfRowsInBigTable As Integer, MaximumOfColumnsInBigTable As Integer, IsEnabled As Boolean)
+
+    End Sub
+
+    Public Function IsAssembliesColumnSelected(ByVal ActiveTable As DrawingTable, ByVal RowIndexOfTable As Integer, ByVal PartNoColumn As Integer, ByVal SelectedTable As Integer) As Boolean
+
+
+        Dim Assy As Integer
+        Try
+
+            If IsNumeric(Right(Trim(ActiveTable.GetCellString(RowIndexOfTable, PartNoColumn)), 3)) And Left(Trim(ActiveTable.GetCellString(RowIndexOfTable, PartNoColumn)), 1).Contains("-") = True Then 'And SelectedTable > 1 = True Then
+
+                If CInt(Right(Trim(ActiveTable.GetCellString(RowIndexOfTable, PartNoColumn)), 3)) / 500 >= 1 Then
+                    Assy = CInt(Right(Trim(ActiveTable.GetCellString(RowIndexOfTable, PartNoColumn)), 3))
+                    ' MsgBox((Trim(ActiveTable.GetCellString(RowIndexOfTable, PartNoColumn))) & "    " & Assy)
+                End If
+                Return True
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            MsgBox("Wrong Table Format " & ((Trim(ActiveTable.GetCellString(RowIndexOfTable, PartNoColumn)))))
+        End Try
+
+
+    End Function
+    Public Function Available2DElements() As String
+        Available2DElements = "No Availaible 2D assemblies"
+        Return Available2DElements
+    End Function
     Public Class Item
 
         ' Dim Drawig = New Drawing
