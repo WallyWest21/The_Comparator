@@ -53,9 +53,11 @@ Public Class MainWindow
 
     'End Sub
 
-    Public Is2DSelected As Boolean
-    Public Is3DSelected As Boolean
+    Public Is2DSelected As Boolean = False
+    Public Is3DSelected As Boolean = False
+    Public IsXLSelected As Boolean = False
 
+    Dim Comparator As New Comparator
 
     'Public Shared MaximumOfColumnsInBigTable As Integer = 0
     'Public Shared MaximumOfRowsInBigTable As Integer = 0
@@ -183,7 +185,7 @@ Public Class MainWindow
         Is2DSelected = True
 
         SelectionEvents(_2DLabel, Is2DSelected)
-        Dim Comparator As New Comparator
+        'Dim Comparator As New Comparator
         Comparator.Select2D()
 
         ListBox2D.ItemsSource = Comparator.Available2DElements
@@ -200,6 +202,8 @@ Public Class MainWindow
 
         Is3DSelected = True
 
+        'MsgBox(4 ^ Convert.ToUInt32(Is3DSelected))
+
         'For counter = 0 To 155 Step 0.001
 
         '    Grid1.RowDefinitions(4).Height = New GridLength(counter)
@@ -208,7 +212,7 @@ Public Class MainWindow
 
         Call SelectionEvents(_3DLabel, Is3DSelected)
 
-        Dim Comparator As New Comparator
+        'Dim Comparator As New Comparator
         Call Comparator.Select3D()
         Call SelectionEvents(_3DLabel, Is3DSelected)
 
@@ -240,7 +244,7 @@ Public Class MainWindow
         ListBox3D.Items.Clear()
     End Sub
     Private Sub Image_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-        Dim Comparator As New Comparator
+        'Dim Comparator As New Comparator
 
         For Each item In ListBox2D.SelectedItems
             MsgBox(item.ToString())
@@ -251,7 +255,22 @@ Public Class MainWindow
         Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
     End Sub
     Private Sub XLLabelOutput_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles XLLabelOutput.MouseLeftButtonDown
-        Dim Comparator As New Comparator
+
+        MsgBox("3D: " & Is3DSelected & "2D: " & Is2DSelected & InputSum())
+
+        Select Case InputSum()
+
+            Case 0
+                MsgBox("Choose at least one input")
+            Case 2
+                Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+            Case 4
+                Call Comparator.Write3DToExcel()
+            Case 6
+                Call Comparator.Write3DToExcel()
+                Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+        End Select
+
         Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
     End Sub
     Private Sub ComparatorWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles ComparatorWindow.Loaded
@@ -261,4 +280,11 @@ Public Class MainWindow
         'Next
         'ComparatorWindow.Height = 335
     End Sub
+    Function InputSum() As Integer
+
+        InputSum = (4 * Convert.ToUInt32(Is3DSelected)) + (2 * Convert.ToUInt32(Is2DSelected)) + (1 * Convert.ToUInt32(IsXLSelected))
+
+        Return InputSum
+
+    End Function
 End Class

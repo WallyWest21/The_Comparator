@@ -275,7 +275,7 @@ Public Class Comparator
 
         Next SelectedProductItem
         Dim count As Integer = 1
-        Call Write3DToExcel()
+        'Call Write3DToExcel()
 
         'Call Write3DToExcel2(QTYS, PartNumbers)
 
