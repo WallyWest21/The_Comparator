@@ -89,7 +89,7 @@
                Content="XL" 
             HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF00A600" 
             FontSize="90" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin" 
-            Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
+            Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" AllowDrop="True">
 
             <Label.Triggers>
                 <EventTrigger RoutedEvent="MouseLeftButtonDown">

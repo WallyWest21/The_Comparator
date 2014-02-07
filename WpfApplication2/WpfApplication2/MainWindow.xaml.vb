@@ -302,4 +302,12 @@ Public Class MainWindow
                 Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
         End Select
     End Sub
+
+    Private Sub XLLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles XLLabel.MouseLeftButtonDown
+        Comparator.SelectXL()
+    End Sub
+
+    Private Sub XLLabel_DragEnter(sender As Object, e As DragEventArgs) Handles XLLabel.DragEnter
+        Comparator.SelectXL()
+    End Sub
 End Class

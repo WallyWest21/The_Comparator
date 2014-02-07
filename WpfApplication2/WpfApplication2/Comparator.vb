@@ -10,7 +10,7 @@ Imports System.Collections.ObjectModel
 Imports INFITF.CATMultiSelectionMode
 Imports System.Windows.Controls
 Imports WpfApplication2
-
+Imports System.Threading
 'Imports INFITF
 Public Class Comparator
     Dim Validation As New Validation
@@ -46,6 +46,11 @@ Public Class Comparator
     Public Shared MaximumOfColumnsInBigTable As Integer = 0
     Public Shared MaximumOfRowsInBigTable As Integer = 0
     Public Shared Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable) As String
+    Public StartingXLRow As Integer
+    Public StartingXLColumn As Integer
+    Public EndXLRow As Integer
+    Public EndXLColumn As Integer
+
 
     Sub WalkDownTree(ByVal oInProduct As Object)
         'As Product)
@@ -666,7 +671,44 @@ GetMeOuttaHere:
 
     End Sub
     Sub SelectXL()
+        Dim oXL As New Excel.Application
+        Dim oWB As Excel.Workbook
+        Dim oSheet As Excel.Worksheet
 
+        Try
+            oXL = GetObject(, "Excel.Application")
+            ' oXL.Sheets(1).Cells.Clear()
+        Catch ex As Exception
+            'oXL = New Excel.Application
+            'oXL = CreateObject("Excel.Application")
+            MsgBox("Open an Excel Worksheet in order to make a selection")
+        End Try
+
+        ' oXL.DisplayAlerts = False
+        'oXL.Visible = True
+
+        oWB = oXL.ActiveWorkbook
+        oSheet = oWB.ActiveSheet
+
+
+        oSheet.Select()
+        oSheet.Activate()
+
+        Task.Delay(5000)
+
+        Dim Stradd, Endadd
+
+        With oSheet.Selection
+            Stradd = .Cells(1, 1).Address
+            Endadd = .Cells(.Rows.Count, .Columns.Count).Address
+        End With
+
+        StartingXLRow = oSheet.Range(Stradd).Row
+        StartingXLColumn = oSheet.Range(Stradd).Column
+        EndXLRow = oSheet.Range(Endadd).Row
+        EndXLColumn = oSheet.Range(Endadd).Column
+
+        MsgBox(StartingXLColumn)
     End Sub
     Sub XLto2D()
 
