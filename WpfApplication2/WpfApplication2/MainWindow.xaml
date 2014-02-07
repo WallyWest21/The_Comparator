@@ -7,11 +7,11 @@
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:c="clr-namespace:WpfApplication2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="ComparatorWindow" mc:Ignorable="d" x:Class="MainWindow"
-    Title="The Comparator" Height="592.463" Width="465" Background="#FF001940" KeyDown="Window_KeyDown" ResizeMode="NoResize" WindowStyle="ToolWindow">
+    Title="The Comparator" Height="592.463" Width="465" Background="#FF001940"  ResizeMode="NoResize" WindowStyle="ToolWindow">
     <Window.Resources>
 
 
-        <c:ChildrenList x:Key="ChildrenlistData"/>
+        <!--<c:ChildrenList x:Key="ChildrenlistData"/>-->
     </Window.Resources>
     <Controls:MetroWindow.Effect>
         <DropShadowEffect/>
@@ -38,10 +38,20 @@
 
                     <Button 
                         Name="Feedback" ToolTip="Feedback"
-                        Content="&#x1f4e7;" FontFamily="Segoe UI Symbol" FontSize="20" VerticalContentAlignment="Center" Width="Auto"/>
+                        Content="&#x1f4e7;" 
+                        FontFamily="Segoe UI Symbol" 
+                        FontSize="20" 
+                        VerticalContentAlignment="Center" 
+                        Width="Auto"/>
+            
                     <Button 
-                        Name="Settings" ToolTip="Settings"
-                        Content="&#xe26e;" FontFamily="Segoe UI Symbol" FontSize="20" VerticalContentAlignment="Center"  Width="Auto"/>
+                        Name="Settings" 
+                        ToolTip="Settings"
+                        Content="&#xe26e;" 
+                        FontFamily="Segoe UI Symbol" 
+                        FontSize="20" 
+                        VerticalContentAlignment="Center"  
+                        Width="Auto"/>
                     <!--<TextBlock Text="feedback" 
                                HorizontalAlignment="Right" 
                                VerticalAlignment="Center" 
@@ -117,14 +127,14 @@
         <Label Content="The Comparator" HorizontalAlignment="Left" Height="75" Margin="20,10,0,0" VerticalAlignment="Top" Width="394" FontSize="48" Foreground="White" FontWeight="ExtraLight" Grid.ColumnSpan="3"/>
         <ListBox 
             x:Name="ListBox3D" Grid.Row="2" Background="#FFDC572E" Foreground="#FFFDFBFB" FontSize="14" 
-            ItemsSource="{Binding Source={StaticResource ChildrenlistData}}" IsSynchronizedWithCurrentItem="True" 
+           
             VerticalAlignment="Center" HorizontalAlignment="Center" Width="150" Height="150" 
             SelectionMode="Multiple"   />
         <DataGrid x:Name="DataGrid1" Grid.Row="4" Margin="20,10,10,107" Grid.ColumnSpan="3" IsSynchronizedWithCurrentItem="True" Visibility="Hidden"/>
         <ListBox x:Name="ListBox2D" 
                  Grid.Row="2"  Grid.Column="1" Width="150" Height="150" 
                  Background="#FFDC572E" Margin="0" Foreground="#FFFDFBFB" FontSize="14" 
-                 ItemsSource="{Binding Source={StaticResource ChildrenlistData}}" IsSynchronizedWithCurrentItem="True"
+                
                  SelectionMode="Single" HorizontalAlignment="Center" VerticalAlignment="Center"
                  
             />

@@ -313,7 +313,6 @@ Public Class Comparator
             Dim ActiveDrawingDocument As DrawingDocument = CATIA.ActiveDocument
         Catch ex As Exception
             MsgBox("Rather than a beep" & vbCrLf & "Or a rude error message:" & vbCrLf & "Open a CATDrawing in the active session")
-
             Exit Sub
         End Try
 
@@ -562,7 +561,116 @@ GetMeOuttaHere:
 
         oXL.DisplayAlerts = True
     End Sub
+    Sub Write3Dto2D()
 
+        Dim CATIA As INFITF.Application
+        Try
+            CATIA = GetObject(, "CATIA.Application")
+
+        Catch ex As Exception
+            MsgBox("The Application you seek" & vbCrLf & "Cannot be located." & vbCrLf & "Open a CATIA session.")
+            Exit Sub
+        End Try
+
+        Dim ActiveDwgDocument As DrawingDocument
+
+        Try
+            ActiveDwgDocument = CATIA.ActiveDocument
+
+        Catch ex As Exception
+            MsgBox("Rather than a beep" & vbCrLf & "Or a rude error message:" & vbCrLf & "Open a CATDrawing in the active session")
+            Exit Sub
+        End Try
+
+        Dim oDrwSheets As DrawingSheets
+        oDrwSheets = ActiveDwgDocument.Sheets
+
+        Dim oDrwSheet As DrawingSheet
+        oDrwSheet = oDrwSheets.ActiveSheet
+
+        Dim oDrwView As DrawingView
+        oDrwView = oDrwSheet.Views.ActiveView
+
+        'Retrieve the view's tables collection
+        Dim oDrwTables As DrawingTables
+        oDrwTables = oDrwView.Tables
+
+        ' Create a new drawing table
+
+        Dim oDrwTable As DrawingTable
+        oDrwTable = oDrwTables.Add(658.5, 89, 20, 6, 5, 20)
+
+        ' Set the drawing table's name
+        odrwtable.Name = "Part List"
+
+        odrwtable.SetColumnSize(odrwtable.NumberOfColumns, 17.8171)
+        odrwtable.SetColumnSize(odrwtable.NumberOfColumns - 1, 43.18)
+        odrwtable.SetColumnSize(odrwtable.NumberOfColumns - 2, 101.6)
+        odrwtable.SetColumnSize(odrwtable.NumberOfColumns - 3, 63.5)
+        odrwtable.SetColumnSize(odrwtable.NumberOfColumns - 4, 22.28)
+        oDrwTable.SetColumnSize(oDrwTable.NumberOfColumns - 4, 22.28)
+
+
+        Dim Realchildren = From child In Children3D.AsParallel() _
+        Group child By child.partnumber, child.nomenclature Into Group _
+        Select qty = Group.Count, partnumber = partnumber, nomenclature = nomenclature
+
+
+
+        Dim i As Integer
+        For i = 4 To oDrwTable.NumberOfRows - 1
+            Dim ItemNo As String
+            ItemNo = i - 3
+            oDrwTable.SetCellString(oDrwTable.NumberOfRows - i, oDrwTable.NumberOfColumns, ItemNo)
+            oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows - i, oDrwTable.NumberOfColumns, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+            oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows - i, oDrwTable.NumberOfColumns - 5, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+        Next
+
+        i = oDrwTable.NumberOfRows - 4
+        For Each result In Realchildren
+            oDrwTable.SetCellString(i, oDrwTable.NumberOfColumns - 5, result.qty)
+            oDrwTable.SetCellString(i, oDrwTable.NumberOfColumns - 2, result.partnumber)
+            oDrwTable.SetCellString(i, oDrwTable.NumberOfColumns - 1, result.nomenclature)
+            i -= 1
+        Next
+
+        'Title Block
+        oDrwTable.SetCellString(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns, "ITEM" & vbCrLf & "NO")
+        oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+        oDrwTable.SetCellString(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns - 1, "MATERIAL" & vbCrLf & "SPECIFICATION")
+        oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns - 1, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+
+        oDrwTable.SetCellString(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns - 2, "NOMENCLATURE" & vbCrLf & "OR DESCRIPTION")
+        oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns - 2, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+
+        oDrwTable.SetCellString(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns - 3, "PART OR" & vbCrLf & "IDENTIFYING NO.")
+        oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns - 3, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+
+
+        oDrwTable.SetCellString(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns - 4, "CAGE" & vbCrLf & "CODE")
+        oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows - 1, oDrwTable.NumberOfColumns - 4, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+
+        oDrwTable.SetCellString(oDrwTable.NumberOfRows, oDrwTable.NumberOfColumns - 5, "QTY" & vbCrLf & "REQD")
+        oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows, oDrwTable.NumberOfColumns - 5, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+
+        oDrwTable.MergeCells(oDrwTable.NumberOfRows, oDrwTable.NumberOfColumns - 4, 1, 5)
+        oDrwTable.SetCellString(oDrwTable.NumberOfRows, oDrwTable.NumberOfColumns - 4, "PARTS LIST")
+        oDrwTable.SetCellAlignment(oDrwTable.NumberOfRows, oDrwTable.NumberOfColumns - 4, DRAFTINGITF.CatTablePosition.CatTableMiddleCenter)
+
+        Dim SelectedTable As INFITF.Selection
+        SelectedTable = CATIA.ActiveDocument.Selection
+        SelectedTable.Clear()
+
+        SelectedTable.Add(oDrwTable)
+        SelectedTable.VisProperties.SetRealWidth(2, 1)
+
+    End Sub
+    Sub SelectXL()
+
+    End Sub
+    Sub XLto2D()
+
+    End Sub
     Sub Is3DPartIn2D()
 
     End Sub

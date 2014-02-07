@@ -287,4 +287,19 @@ Public Class MainWindow
         Return InputSum
 
     End Function
+
+    Private Sub _2DOutputLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles _2DOutputLabel.MouseLeftButtonDown
+        Select Case InputSum()
+
+            Case 0
+                MsgBox("Choose at least one input")
+            Case 1
+                Call Comparator.XLto2D()
+            Case 4
+                Call Comparator.Write3Dto2D()
+            Case 6
+                Call Comparator.Write3DToExcel()
+                Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+        End Select
+    End Sub
 End Class
