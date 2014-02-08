@@ -82,7 +82,7 @@
             VerticalContentAlignment="Center" 
             Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="1" Grid.Column="1" BorderThickness="0"
          />
-        <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center"  Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2" Margin="0"/>
+        <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center"  Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2" Margin="0" AllowDrop="True"/>
 
 
         <Label Name="XLLabel" 
@@ -126,18 +126,26 @@
         </Label>
         <Label Content="The Comparator" HorizontalAlignment="Left" Height="75" Margin="20,10,0,0" VerticalAlignment="Top" Width="394" FontSize="48" Foreground="White" FontWeight="ExtraLight" Grid.ColumnSpan="3"/>
         <ListBox 
-            x:Name="ListBox3D" Grid.Row="2" Background="#FFDC572E" Foreground="#FFFDFBFB" FontSize="14" 
+            x:Name="ListBox3D" Grid.Row="2" Background="#FFDC572E" Foreground="Beige" FontSize="14" 
            
             VerticalAlignment="Center" HorizontalAlignment="Center" Width="150" Height="150" 
             SelectionMode="Multiple"   />
         <DataGrid x:Name="DataGrid1" Grid.Row="4" Margin="20,10,10,107" Grid.ColumnSpan="3" IsSynchronizedWithCurrentItem="True" Visibility="Hidden"/>
         <ListBox x:Name="ListBox2D" 
                  Grid.Row="2"  Grid.Column="1" Width="150" Height="150" 
-                 Background="#FFDC572E" Margin="0" Foreground="#FFFDFBFB" FontSize="14" 
+                 Background="#FFDC572E" Margin="0" Foreground="Beige" FontSize="14" 
                 
                  SelectionMode="Single" HorizontalAlignment="Center" VerticalAlignment="Center"
                  
             />
+
+        <ListBox x:Name="ListBoxDocs" 
+                 Grid.Row="2"  Grid.Column="2" Width="150" Height="150" 
+                 Background="#FFDC572E" Margin="0" Foreground="Beige"  FontSize="14" 
+              
+                 SelectionMode="Single" HorizontalAlignment="Center" VerticalAlignment="Center"
+                 />
+      
         <Image Grid.Column="1" HorizontalAlignment="Center" Height="150" Margin="0" Grid.Row="4" VerticalAlignment="Center" Width="150" Focusable="True" Source="The ComparatorIcon.jpg" MouseLeftButtonDown="Image_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5">
             <Image.Effect>
                 <DropShadowEffect/>

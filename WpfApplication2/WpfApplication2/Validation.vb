@@ -37,6 +37,7 @@
             MsgBox("Invalid Part Number")
         End Try
 
+
         If oComponent.ReferenceProduct.Name <> Component(0) Then
             IsComponent = True
             'End If

@@ -29,6 +29,8 @@ Public Class Comparator
     Public Property Selected3DElements As New ObservableCollection(Of String)
     Public Property Available2DElements As New ObservableCollection(Of String)
     Public Property Selected2DElements As New ObservableCollection(Of String)
+    Public ActiveDocuments As New Collection
+
     ''' <summary>
     ''' Returns the real parent of a component
     ''' </summary>
@@ -506,7 +508,7 @@ Public Class Comparator
         oXL.Visible = True
         '  Dim Selected2DAssy As Integer
         Dim XLColumn As Integer = 5
-        Dim XLRow As Integer = 13
+        Dim XLRow As Integer = 14
         Dim i As Integer = 0
         Dim j As Integer = Selected2DAssy
 
@@ -530,7 +532,7 @@ Public Class Comparator
                 End If
 
 
-                If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy + 1 Then
+                If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy - 1 Then
 
 
 
@@ -634,7 +636,7 @@ GetMeOuttaHere:
         i = oDrwTable.NumberOfRows - 4
         For Each result In Realchildren
             oDrwTable.SetCellString(i, oDrwTable.NumberOfColumns - 5, result.qty)
-            oDrwTable.SetCellString(i, oDrwTable.NumberOfColumns - 2, result.partnumber)
+            oDrwTable.SetCellString(i, oDrwTable.NumberOfColumns - 3, result.partnumber)
             oDrwTable.SetCellString(i, oDrwTable.NumberOfColumns - 1, result.nomenclature)
             i -= 1
         Next

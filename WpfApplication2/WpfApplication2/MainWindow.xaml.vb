@@ -279,6 +279,34 @@ Public Class MainWindow
         '    Grid1.RowDefinitions(row).Height = New GridLength(0, GridUnitType.Star)
         'Next
         'ComparatorWindow.Height = 335
+
+        Dim CATIA As Object
+        Try
+            CATIA = GetObject(, "CATIA.Application")
+
+        Dim oDocuments As Documents
+        oDocuments = CATIA.Documents
+
+        Dim oDocument As Document
+
+            Dim strType As String
+
+        Dim AvailableDocsPartNo() As String
+        For Each oDocument In oDocuments
+            strType = TypeName(oDocument)
+
+            Select Case strType
+                Case "ProductDocument", "DrawingDocument"
+
+                    AvailableDocsPartNo = oDocument.Name.Split(".")
+                    Comparator.ActiveDocuments.Add(AvailableDocsPartNo(0))
+                  
+            End Select
+        Next
+        ListBoxDocs.ItemsSource = Comparator.ActiveDocuments
+        Catch ex As Exception
+
+        End Try
     End Sub
     Function InputSum() As Integer
 
