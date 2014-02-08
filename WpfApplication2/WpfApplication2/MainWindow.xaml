@@ -1,13 +1,10 @@
-﻿<Controls:MetroWindow  
-    
- 
-    
+﻿<Controls:MetroWindow   
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:c="clr-namespace:WpfApplication2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="ComparatorWindow" mc:Ignorable="d" x:Class="MainWindow"
-    Title="The Comparator" Height="592.463" Width="465" Background="#FF001940"  ResizeMode="NoResize" WindowStyle="ToolWindow">
+    Title="The Comparator" Height="612.463" Width="465" Background="#FF001940"  ResizeMode="NoResize" WindowStyle="ToolWindow">
     <Window.Resources>
 
 
@@ -22,7 +19,7 @@
             <!--<Button Content="settings" />-->
             <!--<Button>
                 <StackPanel Orientation="Horizontal">-->
-                    <!--<Rectangle Width="20" Height="20">
+            <!--<Rectangle Width="20" Height="20">
                         <Rectangle.Resources>
                             <SolidColorBrush x:Key="BlackBrush" Color="White" />
                         </Rectangle.Resources>
@@ -31,20 +28,20 @@
                         </Rectangle.Fill>
                     </Rectangle>-->
 
-                    <!--<Image 
+            <!--<Image 
                         Width="20"
                         Source= "The ComparatorIcon.jpg"/>-->
 
 
-                    <Button 
+            <Button 
                         Name="Feedback" ToolTip="Feedback"
                         Content="&#x1f4e7;" 
                         FontFamily="Segoe UI Symbol" 
                         FontSize="20" 
                         VerticalContentAlignment="Center" 
                         Width="Auto"/>
-            
-                    <Button 
+
+            <Button 
                         Name="Settings" 
                         ToolTip="Settings"
                         Content="&#xe26e;" 
@@ -52,12 +49,12 @@
                         FontSize="20" 
                         VerticalContentAlignment="Center"  
                         Width="Auto"/>
-                    <!--<TextBlock Text="feedback" 
+            <!--<TextBlock Text="feedback" 
                                HorizontalAlignment="Right" 
                                VerticalAlignment="Center" 
                                Foreground="White" 
                                />-->
-                <!--</StackPanel>
+            <!--</StackPanel>
             </Button>-->
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>
@@ -69,13 +66,14 @@
             <RowDefinition Name ="InputsResults" Height="155*"/>
             <RowDefinition Name ="Output" Height="155*"/>
             <RowDefinition Name ="Launch" Height="0*"/>
+            <RowDefinition Name ="StatusBar" Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="155*"/>
             <ColumnDefinition Width="155*"/>
             <ColumnDefinition Width="155*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Label 
             x:Name="_2DLabel" Content="2D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center" Width="150" Background="#FF643EBF" 
             HorizontalContentAlignment="Center" 
@@ -140,19 +138,21 @@
             />
 
         <ListBox x:Name="ListBoxDocs" 
-                 Grid.Row="2"  Grid.Column="2" Width="150" Height="150" 
-                 Background="#FFDC572E" Margin="0" Foreground="Beige"  FontSize="14" 
-              
-                 SelectionMode="Single" HorizontalAlignment="Center" VerticalAlignment="Center"
-                 />
-      
+                 Grid.Row="2"  Grid.Column="2" Width="150" Height="150" Margin="0"   FontSize="14" 
+                Background="#FFDC572E" 
+                 SelectionMode="Single" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFE7ECDC"
+                 
+                 >
+            
+        </ListBox>
+
         <Image Grid.Column="1" HorizontalAlignment="Center" Height="150" Margin="0" Grid.Row="4" VerticalAlignment="Center" Width="150" Focusable="True" Source="The ComparatorIcon.jpg" MouseLeftButtonDown="Image_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5">
             <Image.Effect>
                 <DropShadowEffect/>
             </Image.Effect>
         </Image>
-        
-       
+
+
 
         <!--<Grid.Triggers>
             <EventTrigger RoutedEvent ="Mouse.MouseEnter" SourceName="XLLabel">
@@ -170,9 +170,36 @@
         </Grid.Triggers>-->
 
 
-
+        <StackPanel 
+           Grid.Row ="5" Width="465" Height="auto" Grid.ColumnSpan="3" Background="#FF001940"       
+        >
+            <TextBlock 
+                x:Name="StatusBarText"
+                TextWrapping="Wrap" 
+                Text="Choose at least one input" 
+                Foreground="White" 
+                TextAlignment="Left"
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Left"
+                Width="Auto" Margin="3,0,0,0"
+               />
+            <!--<TextBlock 
+            	x:Name="StatusBarText2"
+            	TextWrapping="Wrap" 
+            	Text="Choose something" 
+            	Foreground="White" 
+            	TextAlignment="Left"
+            	VerticalAlignment="Center"      
+            	HorizontalAlignment="Right"
+            	Width="Auto"
+             
+             
+               />-->
+        </StackPanel>
 
     </Grid>
+
+
 
 
 
