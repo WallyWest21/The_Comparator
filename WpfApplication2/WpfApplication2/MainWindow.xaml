@@ -80,7 +80,14 @@
             VerticalContentAlignment="Center" 
             Foreground="White" FontSize="90" Cursor="" FontWeight="Thin" Grid.Row="1" Grid.Column="1" BorderThickness="0"
          />
-        <Label x:Name="_3DLabel" Content="3D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center"  Width="150" Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="1" MouseDown="Label_MouseDown_2" Margin="0" AllowDrop="True"/>
+        <Label x:Name="_3DLabel" 
+               Content="3D" HorizontalAlignment="Center" Height="150" VerticalAlignment="Center"  Width="150" 
+               Background="#FF2E8DEF" FontSize="90" Foreground="White" FontWeight="Thin" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+               Grid.Row="1" MouseDown="Label_MouseDown_2" Margin="0" AllowDrop="True"
+               
+          
+               
+               />
 
 
         <Label Name="XLLabel" 
@@ -129,6 +136,7 @@
             VerticalAlignment="Center" HorizontalAlignment="Center" Width="150" Height="150" 
             SelectionMode="Multiple"   />
         <DataGrid x:Name="DataGrid1" Grid.Row="4" Margin="20,10,10,107" Grid.ColumnSpan="3" IsSynchronizedWithCurrentItem="True" Visibility="Hidden"/>
+        
         <ListBox x:Name="ListBox2D" 
                  Grid.Row="2"  Grid.Column="1" Width="150" Height="150" 
                  Background="#FFDC572E" Margin="0" Foreground="Beige" FontSize="14" 
@@ -140,11 +148,13 @@
         <ListBox x:Name="ListBoxDocs" 
                  Grid.Row="2"  Grid.Column="2" Width="150" Height="150" Margin="0"   FontSize="14" 
                 Background="#FFDC572E" 
-                 SelectionMode="Single" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFE7ECDC"
+                SelectionMode="Single" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFE7ECDC"
                  
-                 >
             
-        </ListBox>
+                 
+         
+
+        />
 
         <Image Grid.Column="1" HorizontalAlignment="Center" Height="150" Margin="0" Grid.Row="4" VerticalAlignment="Center" Width="150" Focusable="True" Source="The ComparatorIcon.jpg" MouseLeftButtonDown="Image_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5">
             <Image.Effect>
@@ -196,11 +206,49 @@
              
                />-->
         </StackPanel>
+        
+        <ListBox
+            x:Name="Available3D"
+        	HorizontalAlignment="Center" Height="10" VerticalAlignment="Bottom"  Width="150" 
+        	Background="#FF0A5DB0" FontSize="14" Foreground="White" FontWeight="Thin"   Grid.Row="1" Opacity="0.5"
+            >
+            
+            <ListBox.Triggers >
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation AutoReverse="False" 
+                            Duration="0:0:2"
+                            AccelerationRatio="0.05" DecelerationRatio="0.95"               
+                            From="10"
+                            Storyboard.TargetName="Available3D"
+                            Storyboard.TargetProperty="Height"
+                            To="110" />                       
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
 
+                <EventTrigger RoutedEvent="MouseRightButtonDown">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation AutoReverse="False" 
+                            Duration="0:0:2"
+                            AccelerationRatio="0.05" DecelerationRatio="0.95"               
+                            From="150"
+                            Storyboard.TargetName="Available3D"
+                            Storyboard.TargetProperty="Height"
+                            To="10" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+
+            </ListBox.Triggers>
+          </ListBox>
+             
+           
+           
     </Grid>
-
-
-
 
 
 </Controls:MetroWindow>

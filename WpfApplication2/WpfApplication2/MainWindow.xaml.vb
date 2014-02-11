@@ -303,7 +303,8 @@ Public Class MainWindow
                   
             End Select
         Next
-        ListBoxDocs.ItemsSource = Comparator.ActiveDocuments
+            ListBoxDocs.ItemsSource = Comparator.ActiveDocuments
+            Available3D.ItemsSource = Comparator.ActiveDocuments
         Catch ex As Exception
 
         End Try
