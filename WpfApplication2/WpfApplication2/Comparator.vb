@@ -696,7 +696,7 @@ GetMeOuttaHere:
         oSheet.Select()
         oSheet.Activate()
 
-        Task.Delay(5000)
+        'Task.Delay(5000)
 
         Dim Stradd, Endadd
 
