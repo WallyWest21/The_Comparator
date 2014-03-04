@@ -193,28 +193,63 @@
                 HorizontalAlignment="Left"
                 Width="Auto" Margin="3,0,0,0"
                />
-            <!--<TextBlock 
-            	x:Name="StatusBarText2"
-            	TextWrapping="Wrap" 
-            	Text="Choose something" 
-            	Foreground="White" 
-            	TextAlignment="Left"
-            	VerticalAlignment="Center"      
-            	HorizontalAlignment="Right"
-            	Width="Auto"
-             
-             
-               />-->
+       
         </StackPanel>
-        
+
+
+        <StackPanel
+            x:Name="Available2DPanel"
+            HorizontalAlignment="Center"  VerticalAlignment="Bottom"
+            Height="20" Width="150"
+            Grid.Row="1" Grid.Column=" 1"
+            Background="Beige"
+            >
+            <StackPanel.Triggers>
+                <EventTrigger RoutedEvent="MouseLeftButtonDown">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation AutoReverse="False" 
+                            Duration="0:0:0.5"
+                            AccelerationRatio="0.20" DecelerationRatio="0.8"               
+                            From="10"
+                            Storyboard.TargetName="Available2DPanel"
+                            Storyboard.TargetProperty="Height"
+                            To="110" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="MouseRightButtonDown">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation AutoReverse="False" 
+                            Duration="0:0:2"
+                            AccelerationRatio="0.05" DecelerationRatio="0.95"               
+                            From="110"
+                            Storyboard.TargetName="Available2DPanel"
+                            Storyboard.TargetProperty="Height"
+                            To="10" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                
+                
+            </StackPanel.Triggers>
+
+
+
+
+        </StackPanel>
+
+
         <ListBox
             x:Name="Available3D"
-        	HorizontalAlignment="Center" Height="10" VerticalAlignment="Bottom"  Width="150" 
-        	Background="#FF0A5DB0" FontSize="14" Foreground="White" FontWeight="Thin"   Grid.Row="1" Opacity="0.5"
+        	HorizontalAlignment="Center" Height="20" VerticalAlignment="Bottom"  Width="150" Grid.Row="1"
+        	Background="#FF0A5DB0" FontSize="14" Foreground="White" FontWeight="Thin"    Opacity="0.9"
             >
             
             <ListBox.Triggers >
-                <EventTrigger RoutedEvent="MouseEnter">
+                <EventTrigger RoutedEvent="MouseRightButtonDown">
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation AutoReverse="False" 
@@ -228,13 +263,13 @@
                     </BeginStoryboard>
                 </EventTrigger>
 
-                <EventTrigger RoutedEvent="MouseRightButtonDown">
+                <EventTrigger RoutedEvent="MouseLeave">
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation AutoReverse="False" 
                             Duration="0:0:2"
                             AccelerationRatio="0.05" DecelerationRatio="0.95"               
-                            From="150"
+                            From="110"
                             Storyboard.TargetName="Available3D"
                             Storyboard.TargetProperty="Height"
                             To="10" />
@@ -245,8 +280,7 @@
 
             </ListBox.Triggers>
           </ListBox>
-             
-           
+
            
     </Grid>
 

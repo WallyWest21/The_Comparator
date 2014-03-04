@@ -11,6 +11,8 @@ Imports INFITF.CATMultiSelectionMode
 Imports System.Windows.Controls
 Imports WpfApplication2
 Imports System.Threading
+Imports System.IO
+
 'Imports INFITF
 Public Class Comparator
     Dim Validation As New Validation
@@ -455,29 +457,7 @@ Public Class Comparator
             Next
         Next
 
-        'For j = 0 To MaximumOfColumnsInBigTable
-
-        '    For i = 0 To MaximumOfRowsInBigTable
-        '        oXL.ActiveSheet.Cells(i + 13, j + 1) = Big2DTable(i, j)
-        '        oXL.ActiveSheet.Cells(i + 13, j + 1).wraptext = True
-
-
-        '        If j = MaximumOfColumnsInBigTable - 3 Then
-        '            oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 15
-        '        End If
-
-        '        If j = MaximumOfColumnsInBigTable - 2 Then
-        '            oXL.ActiveSheet.Cells(i + 13, j + 1).columnwidth = 35
-
-        '        End If
-
-
-        '    Next i
-
-        'Next
-
-
-        'Call Write2DToExcel(MaximumOfColumnsInBigTable, MaximumOfRowsInBigTable, Big2DTable)
+       
 
     End Sub
 
@@ -711,6 +691,37 @@ GetMeOuttaHere:
         EndXLColumn = oSheet.Range(Endadd).Column
 
         MsgBox(StartingXLColumn)
+    End Sub
+
+    Sub HTMLGenerator()
+        Dim myTitle = "Hello this the comparator report"
+        Dim Link As String = "D:\RHDSetup.log" '"http://www.w3schools.com"
+        Dim D3HTML As String
+
+        'For Each child In BOM3D
+        D3HTML = "<td>" & "1" & "</td><td><a href=<%=" & Link & "%>>" & "CouldBeAVariable" & "</a></td>"
+        ' Next
+
+
+        Dim myHTML As XElement =
+                    <html>
+                        <head>
+                            <title><%= myTitle %></title>
+                        </head>
+                        <body>
+                            <h1>Welcome to my hood! Where the hood at?</h1>
+                            <table border="1">
+                                <tr><th>ID</th><th>Name</th></tr>
+                                <tr>
+                                    <td>1</td><td><a href=<%= Link %>>CouldBeAVariable</a></td>
+                                </tr>
+                            </table>
+                        </body>
+                    </html>
+
+        Using writer As StreamWriter = New StreamWriter("TheComparator.html")
+            writer.Write(myHTML)
+        End Using
     End Sub
     Sub XLto2D()
 

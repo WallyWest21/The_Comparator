@@ -18,6 +18,8 @@ Imports ProductStructureTypeLib
 Imports System.Collections.ObjectModel
 Imports INFITF
 Imports System.Windows.Media.Animation
+Imports System.IO
+'Imports System.Xml.Linq
 
 Public Class MainWindow
 
@@ -121,6 +123,15 @@ Public Class MainWindow
         '' comp.Add(comparator.Realchildren3D(1))
 
         'ListBox3D.ItemsSource = comp
+
+        'XML Element Literal
+        'XML Literals (Visual Basic)
+        ' http://msdn.microsoft.com/en-us/library/bb384563.aspx
+        'http://stackoverflow.com/questions/1004776/write-html-in-c-sharp
+
+        Dim comp As New Comparator
+        comp.HTMLGenerator()
+
 
     End Sub
     Public Sub SelectionEvents(UIElements As Object, IsSelected As Boolean)
@@ -284,25 +295,25 @@ Public Class MainWindow
         Try
             CATIA = GetObject(, "CATIA.Application")
 
-        Dim oDocuments As Documents
-        oDocuments = CATIA.Documents
+            Dim oDocuments As Documents
+            oDocuments = CATIA.Documents
 
-        Dim oDocument As Document
+            Dim oDocument As Document
 
             Dim strType As String
 
-        Dim AvailableDocsPartNo() As String
-        For Each oDocument In oDocuments
-            strType = TypeName(oDocument)
+            Dim AvailableDocsPartNo() As String
+            For Each oDocument In oDocuments
+                strType = TypeName(oDocument)
 
-            Select Case strType
-                Case "ProductDocument", "DrawingDocument"
+                Select Case strType
+                    Case "ProductDocument", "DrawingDocument"
 
-                    AvailableDocsPartNo = oDocument.Name.Split(".")
-                    Comparator.ActiveDocuments.Add(AvailableDocsPartNo(0))
-                  
-            End Select
-        Next
+                        AvailableDocsPartNo = oDocument.Name.Split(".")
+                        Comparator.ActiveDocuments.Add(AvailableDocsPartNo(0))
+
+                End Select
+            Next
             ListBoxDocs.ItemsSource = Comparator.ActiveDocuments
             Available3D.ItemsSource = Comparator.ActiveDocuments
         Catch ex As Exception
