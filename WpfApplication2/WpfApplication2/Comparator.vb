@@ -696,11 +696,21 @@ GetMeOuttaHere:
     Sub HTMLGenerator()
         Dim myTitle = "Hello this the comparator report"
         Dim Link As String = "D:\RHDSetup.log" '"http://www.w3schools.com"
-        Dim D3HTML As String
+
+        Dim D3HTML As XElement
 
         'For Each child In BOM3D
-        D3HTML = "<td>" & "1" & "</td><td><a href=<%=" & Link & "%>>" & "CouldBeAVariable" & "</a></td>"
+        'D3HTML = "<td>" & "1" & "</td><td><a href= " & Link & ">" & "CouldBeAVariable" & "</a></td>"
+        ' For i = 1 To 5
+        D3HTML =
+<html>
+    <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable2</a></td></tr>
+</html>
+        'D3HTML.AddAfterSelf(D3HTML)
+
+        'Next
         ' Next
+
 
 
         Dim myHTML As XElement =
@@ -710,19 +720,34 @@ GetMeOuttaHere:
                         </head>
                         <body>
                             <h1>Welcome to my hood! Where the hood at?</h1>
-                            <table border="1">
-                                <tr><th>ID</th><th>Name</th></tr>
-                                <tr>
-                                    <td>1</td><td><a href=<%= Link %>>CouldBeAVariable</a></td>
-                                </tr>
+                            <table border="1" align="center">
+                                <tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th></tr>
+                                <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable1</a></td></tr>
                             </table>
                         </body>
                     </html>
 
+
+        Dim myHTMLafter As XElement = myHTML.<body>(0)
+        Dim BodyHTML As XElement
+        Dim TableHTML As XElement
+
+
+        For i = 1 To 5
+            myHTMLafter.AddAfterSelf(D3HTML)
+        Next
+
+        ' myHTMLafter.AddAfterSelf(From d3 In D3HTML.Elements() Where CInt(d3) = 4 Select d3)
+
+        ' http://msdn.microsoft.com/en-us/library/system.xml.linq.xelement.addafterself(v=vs.110).aspx
+        ' <%= D3HTML %>
+        '<td>1</td><td><a href=<%= Link %>>CouldBeAVariable</a></td>
         Using writer As StreamWriter = New StreamWriter("TheComparator.html")
             writer.Write(myHTML)
         End Using
     End Sub
+
+
     Sub XLto2D()
 
     End Sub
