@@ -25,7 +25,7 @@ Public Class Comparator
     ''' <summary>
     ''' It is a Collection of all the items in 2D
     ''' </summary>
-    Public ReadOnly Children2D As New Collection
+    Public Children2D As Dictionary(Of oDrawing.PartsList, String)
 
     Public Property Realchildren3D As New ObservableCollection(Of String)
     Public Property Selected3DElements As New ObservableCollection(Of String)
@@ -450,28 +450,6 @@ Public Class Comparator
         End Try
 
 
-
-        'Dim oXL As Excel.Application
-        'Dim oWB As Excel.Workbook
-        'Dim oSheet As Excel.Worksheet
-
-
-
-        'Try
-        '    oXL = GetObject(, "Excel.Application")
-        '    ' oXL.Sheets(1).Cells.Clear()
-        'Catch ex As Exception
-        '    oXL = New Excel.Application
-
-
-        'End Try
-
-        '' oXL.DisplayAlerts = False
-        'oXL.Visible = True
-
-
-
-
         Dim Dwg As oDrawing = New oDrawing
 
         Dim what(0)
@@ -537,7 +515,7 @@ Public Class Comparator
         MatSpec.Column = MaximumOfColumnsInBigTable + 1 - 1
         Nomenclature.Column = MaximumOfColumnsInBigTable + 1 - 2
         PartNo.Column = MaximumOfColumnsInBigTable + 1 - 3
-        CageCode.Column = MaximumOfColumnsInBigTable + 1 - 3
+        CageCode.Column = MaximumOfColumnsInBigTable + 1 - 4
 
         Dwg.Number = "Dummy"
 
@@ -551,24 +529,20 @@ Public Class Comparator
                 ActiveTable = SelectedTableCollection(SelectedTable)
 
                 ColumnIndexOfTable = 1
-                If (ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable)).Contains("QTY") = True And SelectedTable > 1 Then
-                    Continue For
-                End If
+                'If (ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable)).Contains("QTY") = True And SelectedTable > 1 Then
+                '    Continue For
+                'End If
 
-                If ActiveTable.GetCellString(RowIndexOfTable, Nomenclature.Column).Contains("NOMENCLATURE") = True And SelectedTable > 1 Then
-                    Continue For
-                End If
+                'If ActiveTable.GetCellString(RowIndexOfTable, Nomenclature.Column).Contains("NOMENCLATURE") = True And SelectedTable > 1 Then
+                '    Continue For
+                'End If
 
-                'If Left((ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column)), 2).Contains("-5") = True And SelectedTable > 1 Then
+
                 If Dwg.IsAssembliesColumnSelected(ActiveTable, RowIndexOfTable, PartNo.Column, SelectedTable) = True Then
 
-                    'Dwg.ParentOf2DAssemblies.Add(ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column))
-                    'Available2DElements.Add(Dwg.Number & ActiveTable.GetCellString(RowIndexOfTable, PartNo.Column))
-                    Continue For
+                    ' Continue For
                 End If
-                'If Dwg.IsAssemblyRowSelected(ActiveTable, RowIndexOfTable, PartNo.Column, SelectedTable) = False Then
-                '    MsgBox("Nothing")
-                'End If
+               
                 For ColumnIndexOfTable = 1 To MaximumOfColumnsInBigTable + 1
                     Big2DTable(RowIndexOfBigTable, ColumnIndexOfTable - 1) = ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable)
                     If ColumnIndexOfTable < CageCode.Column And Dwg.IsAssembliesColumnSelected(ActiveTable, RowIndexOfTable, ColumnIndexOfTable, SelectedTable) = True Then
@@ -581,7 +555,45 @@ Public Class Comparator
             Next
         Next
 
-       
+        ItemNo.Column = MaximumOfColumnsInBigTable
+        MatSpec.Column = MaximumOfColumnsInBigTable - 1
+        Nomenclature.Column = MaximumOfColumnsInBigTable - 2
+        PartNo.Column = MaximumOfColumnsInBigTable - 3
+        CageCode.Column = MaximumOfColumnsInBigTable - 4
+
+        Dim PartsList As oDrawing.PartsList
+        Dim ParentColumn As Integer
+        Dim ParentDescriptionRow As Integer
+        Dim QTY As String
+
+        Children2D = New Dictionary(Of oDrawing.PartsList, String)
+
+        For i = 0 To MaximumOfRowsInBigTable
+            'For j = 0 To MaximumOfColumnsInBigTable
+            If IsNumeric(Big2DTable(i, ItemNo.Column)) = True Then
+                PartsList = New oDrawing.PartsList
+
+                PartsList.MatSpec = New Collection
+                PartsList.ItemNo = CInt(Big2DTable(i, ItemNo.Column))
+                PartsList.MatSpec.Add(Big2DTable(i, MatSpec.Column))
+                PartsList.Nomenclature = Big2DTable(i, Nomenclature.Column)
+                PartsList.PartNumber = Big2DTable(i, PartNo.Column)
+
+                For ParentColumn = 0 To CageCode.Column - 1
+                    If String.IsNullOrEmpty(Big2DTable(i, ParentColumn)) = False Then
+                        PartsList.Parent = Big2DTable(MaximumOfRowsInBigTable - 1, ParentColumn)
+                        For ParentDescriptionRow = 0 To MaximumOfRowsInBigTable
+                            If PartsList.Parent = Big2DTable(ParentDescriptionRow, PartNo.Column) Then
+                                PartsList.ParentDescription = Big2DTable(ParentDescriptionRow, Nomenclature.Column)
+                            End If
+                        Next
+                        QTY = Big2DTable(i, ParentColumn)
+                        Children2D.Add(PartsList, QTY)
+                    End If
+                Next
+            End If
+            'Next
+        Next
 
     End Sub
 
@@ -907,21 +919,12 @@ GetMeOuttaHere:
 
         Dim D3HTML As XElement
 
-        'For Each child In BOM3D
-        'D3HTML = "<td>" & "1" & "</td><td><a href= " & Link & ">" & "CouldBeAVariable" & "</a></td>"
-        ' For i = 1 To 5
         D3HTML =
 <html>
     <table border="1" align="center">
         <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable4</a></td></tr>
     </table>
 </html>
-        'D3HTML.AddAfterSelf(D3HTML)
-
-        'Next
-        ' Next
-
-
 
         Dim myHTML As XElement =
                     <html>
@@ -939,7 +942,6 @@ GetMeOuttaHere:
 
 
 
-        ' myHTML.Element("html").Element("body").Element("table").Element("tr").AddAfterSelf(D3HTML)
 
         Dim myHTMLafter As XElement = myHTML.<table>(0)
        
@@ -959,22 +961,6 @@ GetMeOuttaHere:
             myHTMLafter.AddAfterSelf(D3HTML)
         Next
 
-
-        '        For i = 1 To 5
-
-        '            D3HTML =
-        '<html>
-        '    <table border="1" align="center">
-        '        <tr><td><%= i + 12 %></td><td><a href=<%= Link %>><%= i %></a></td></tr>
-        '    </table>
-        '</html>
-
-        '            myHTMLafter.AddAfterSelf(D3HTML)
-        '        Next
-
-
-
-        ' myHTMLafter.AddAfterSelf(From d3 In D3HTML.Elements() Where CInt(d3) = 4 Select d3)
 
         ' http://msdn.microsoft.com/en-us/library/system.xml.linq.xelement.addafterself(v=vs.110).aspx
         ' <%= D3HTML %>

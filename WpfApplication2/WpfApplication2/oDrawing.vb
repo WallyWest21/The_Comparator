@@ -1,4 +1,5 @@
 ﻿Imports DRAFTINGITF
+
 Public Class oDrawing
 
     Public Code As String
@@ -116,6 +117,21 @@ Public Class oDrawing
         Public DrawingNo As String
         Public MatSpec As New Collection
         Public Quantity As Integer
+    End Class
+
+    Public Structure PartsList
+        Public Parent As String
+        Public ParentDescription As String
+        Public PartNumber As String
+        Public Nomenclature As String
+        Public MatSpec As Collection
+        Public ItemNo As Integer
+    End Structure
+
+    Public Class TFList
+        '  Inherits PartsList
+        Public MatlCode As String
+
     End Class
 End Class
 
