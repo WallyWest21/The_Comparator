@@ -59,6 +59,7 @@ Public Class MainWindow
     Public Is3DSelected As Boolean = False
     Public IsXLSelected As Boolean = False
 
+
     Dim Comparator As New Comparator
 
     'Public Shared MaximumOfColumnsInBigTable As Integer = 0
@@ -111,7 +112,7 @@ Public Class MainWindow
     'End Sub
     Private Sub HTML_Label_MouseDown(sender As Object, e As MouseButtonEventArgs)
     End Sub
-    Private Sub HTMLLabel_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles HTMLLabel.MouseDown
+    Private Sub HTMLLabel_MouseDown(sender As Object, e As MouseButtonEventArgs)
         'Dim comp As ChildrenList
         'Dim comparator As Comparator
 
@@ -129,9 +130,9 @@ Public Class MainWindow
         ' http://msdn.microsoft.com/en-us/library/bb384563.aspx
         'http://stackoverflow.com/questions/1004776/write-html-in-c-sharp
 
-        Dim comp As New Comparator
-        comp.HTMLGenerator()
-
+        ' Dim comp As New Comparator
+        'comp.HTMLGenerator()
+        Comparator.Write3DtoHTML()
 
     End Sub
     Public Sub SelectionEvents(UIElements As Object, IsSelected As Boolean)
@@ -337,9 +338,9 @@ Public Class MainWindow
                 Call Comparator.XLto2D()
             Case 4
                 Call Comparator.Write3Dto2D()
-            Case 6
-                Call Comparator.Write3DToExcel()
-                Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+                'Case 6
+                '    Call Comparator.Write3DToExcel()
+                '    Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
         End Select
     End Sub
 
@@ -349,5 +350,22 @@ Public Class MainWindow
 
     Private Sub XLLabel_DragEnter(sender As Object, e As DragEventArgs) Handles XLLabel.DragEnter
         Comparator.SelectXL()
+    End Sub
+
+    Private Sub HTMLLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles HTMLLabel.MouseLeftButtonDown
+        Select Case InputSum()
+
+            Case 0
+                MsgBox("Choose at least one input")
+            Case 1
+                Call Comparator.XLtoHTML()
+            Case 2
+                Call Comparator.Write2DtoHTML()
+            Case 4
+                Call Comparator.Write3DtoHTML()
+            Case 6
+                Call Comparator.Wrtite3Dvs2DtoHTML()
+
+        End Select
     End Sub
 End Class

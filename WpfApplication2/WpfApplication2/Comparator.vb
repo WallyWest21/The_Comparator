@@ -167,6 +167,113 @@ Public Class Comparator
         Select qty = Group.Count, partnumber = partnumber, nomenclature = nomenclature
 
 
+        '***************************************************************************
+        '***************************************************************************
+
+
+        Dim myTitle = "Hello this the comparator report"
+        Dim Link As String = "D:\RHDSetup.log" '"http://www.w3schools.com"
+
+        Dim D3HTML As XElement
+
+        'For Each child In BOM3D
+        'D3HTML = "<td>" & "1" & "</td><td><a href= " & Link & ">" & "CouldBeAVariable" & "</a></td>"
+        ' For i = 1 To 5
+        D3HTML =
+<html>
+    <table border="1" align="center">
+        <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable4</a></td></tr>
+    </table>
+</html>
+        'D3HTML.AddAfterSelf(D3HTML)
+
+        'Next
+        ' Next
+
+
+
+        Dim myHTML As XElement =
+                    <html>
+                        <head>
+                            <title><%= myTitle %></title>
+                        </head>
+                        <body>
+                            <h1>Welcome 3D to HTML report2312! Where the hood at?</h1>
+                        </body>
+                        <table border="1" align="center">
+                            <tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th></tr>
+                            <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable1</a></td></tr>
+                        </table>
+                    </html>
+
+
+
+        ' myHTML.Element("html").Element("body").Element("table").Element("tr").AddAfterSelf(D3HTML)
+
+        Dim myHTMLafter As XElement = myHTML.<table>(0)
+
+        Dim Realchildrens = From childs In Children3D.AsParallel() _
+        Group childs By childs.partnumber, childs.nomenclature Into Group _
+        Select qty = Group.Count, partnumber = partnumber, nomenclature = nomenclature
+
+        For Each results In Realchildrens
+            MsgBox("yeah")
+            D3HTML =
+<html>
+    <table border="1" align="center">
+        <tr><td><%= results.qty %></td><td><a href=<%= Link %>><%= results.partnumber %></a></td></tr>
+    </table>
+</html>
+
+            myHTMLafter.AddAfterSelf(D3HTML)
+        Next
+
+
+
+        '***************************************************************************************************
+        '***************************************************************************************************
+
+        '        For i = 1 To 5
+
+        '            D3HTML =
+        '<html>
+        '    <table border="1" align="center">
+        '        <tr><td><%= i + 12 %></td><td><a href=<%= Link %>><%= i %></a></td></tr>
+        '    </table>
+        '</html>
+
+        '            myHTMLafter.AddAfterSelf(D3HTML)
+        '        Next
+
+
+
+        ' myHTMLafter.AddAfterSelf(From d3 In D3HTML.Elements() Where CInt(d3) = 4 Select d3)
+
+        ' http://msdn.microsoft.com/en-us/library/system.xml.linq.xelement.addafterself(v=vs.110).aspx
+        ' <%= D3HTML %>
+        '<td>1</td><td><a href=<%= Link %>>CouldBeAVariable</a></td>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        '***********************************************************************************
+        '***********************************************************************************
+
+
+
+
 
         'Dim Realchildren = From child In Children3D.AsParallel()
         ' Select child.partnumber, child.nomenclature
@@ -191,6 +298,13 @@ Public Class Comparator
             oXL.ActiveSheet.Cells(i + 13, 2).Value = result.partnumber
             oXL.ActiveSheet.Cells(i + 13, 3).Value = result.nomenclature
 
+
+
+
+
+
+
+
             'oXL.Sheets(1).Cells(j + 3, 3).Value = Realchildren(i).Name
             'oXL.Sheets(1).Cells(j + 3, 3).Value = Realchildren(i).ReferenceProduct.Parent.Name
             ''Cells(i + 13, 3).Value = Realchildren(i).Name
@@ -213,6 +327,16 @@ Public Class Comparator
         ''  For Each kid In Realchildren3D
         'Console.WriteLine(1)
         ''Next
+
+
+        '*************************************************
+        '**************************************************
+
+
+        Using writer As StreamWriter = New StreamWriter("TheComparator.html")
+            writer.Write(myHTML)
+        End Using
+
 
     End Sub
 
@@ -704,7 +828,9 @@ GetMeOuttaHere:
         ' For i = 1 To 5
         D3HTML =
 <html>
-    <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable2</a></td></tr>
+    <table border="1" align="center">
+        <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable4</a></td></tr>
+    </table>
 </html>
         'D3HTML.AddAfterSelf(D3HTML)
 
@@ -720,20 +846,42 @@ GetMeOuttaHere:
                         </head>
                         <body>
                             <h1>Welcome to my hood! Where the hood at?</h1>
-                            <table border="1" align="center">
-                                <tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th></tr>
-                                <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable1</a></td></tr>
-                            </table>
                         </body>
+                        <table border="1" align="center">
+                            <tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th></tr>
+                            <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable1</a></td></tr>
+                        </table>
                     </html>
 
 
-        Dim myHTMLafter As XElement = myHTML.<body>(0)
-        Dim BodyHTML As XElement
-        Dim TableHTML As XElement
+
+        ' myHTML.Element("html").Element("body").Element("table").Element("tr").AddAfterSelf(D3HTML)
+
+        Dim myHTMLafter As XElement = myHTML.<table>(0)
+        'Dim BodyHTML As XElement =
+        '        <body>
+        '            <h1>Welcome to my hood! Where the hood at?</h1>
+        '            <table border="1" align="center">
+        '                <tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th></tr>
+        '                <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable1</a></td></tr>
+        '            </table>
+        '        </body>
+
+        'Dim TableHTML As XElement =
+        '    <table border="1" align="center">
+        '        <tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th></tr>
+        '        <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable1</a></td></tr>
+        '    </table>
 
 
         For i = 1 To 5
+            D3HTML =
+<html>
+    <table border="1" align="center">
+        <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable<%= i %></a></td></tr>
+    </table>
+</html>
+
             myHTMLafter.AddAfterSelf(D3HTML)
         Next
 
@@ -751,6 +899,104 @@ GetMeOuttaHere:
     Sub XLto2D()
 
     End Sub
+
+    Sub Write3DtoHTML()
+
+        Dim myTitle = "Hello this the comparator report"
+        Dim Link As String = "D:\RHDSetup.log" '"http://www.w3schools.com"
+
+        Dim D3HTML As XElement
+
+        'For Each child In BOM3D
+        'D3HTML = "<td>" & "1" & "</td><td><a href= " & Link & ">" & "CouldBeAVariable" & "</a></td>"
+        ' For i = 1 To 5
+        D3HTML =
+<html>
+    <table border="1" align="center">
+        <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable4</a></td></tr>
+    </table>
+</html>
+        'D3HTML.AddAfterSelf(D3HTML)
+
+        'Next
+        ' Next
+
+
+
+        Dim myHTML As XElement =
+                    <html>
+                        <head>
+                            <title><%= myTitle %></title>
+                        </head>
+                        <body>
+                            <h1>Welcome 3D to HTML report! Where the hood at?</h1>
+                        </body>
+                        <table border="1" align="center">
+                            <tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th></tr>
+                            <tr><td>1</td><td><a href=<%= Link %>>CouldBeAVariable1</a></td></tr>
+                        </table>
+                    </html>
+
+
+
+        ' myHTML.Element("html").Element("body").Element("table").Element("tr").AddAfterSelf(D3HTML)
+
+        Dim myHTMLafter As XElement = myHTML.<table>(0)
+       
+        Dim Realchildrens = From childs In Children3D.AsParallel() _
+        Group childs By childs.partnumber, childs.nomenclature Into Group _
+        Select qty = Group.Count, partnumber = partnumber, nomenclature = nomenclature
+
+        For Each results In Realchildrens
+
+            D3HTML =
+<html>
+    <table border="1" align="center">
+        <tr><td><%= results.qty %></td><td><a href=<%= Link %>><%= results.partnumber %></a></td></tr>
+    </table>
+</html>
+
+            myHTMLafter.AddAfterSelf(D3HTML)
+        Next
+
+
+        '        For i = 1 To 5
+
+        '            D3HTML =
+        '<html>
+        '    <table border="1" align="center">
+        '        <tr><td><%= i + 12 %></td><td><a href=<%= Link %>><%= i %></a></td></tr>
+        '    </table>
+        '</html>
+
+        '            myHTMLafter.AddAfterSelf(D3HTML)
+        '        Next
+
+
+
+        ' myHTMLafter.AddAfterSelf(From d3 In D3HTML.Elements() Where CInt(d3) = 4 Select d3)
+
+        ' http://msdn.microsoft.com/en-us/library/system.xml.linq.xelement.addafterself(v=vs.110).aspx
+        ' <%= D3HTML %>
+        '<td>1</td><td><a href=<%= Link %>>CouldBeAVariable</a></td>
+        Using writer As StreamWriter = New StreamWriter("TheComparator.html")
+            writer.Write(myHTML)
+        End Using
+
+
+
+    End Sub
+    Sub XLtoHTML()
+    End Sub
+
+    Sub Wrtite3Dvs2DtoHTML()
+
+    End Sub
+
+    Sub Write2DtoHTML()
+
+    End Sub
+
     Sub Is3DPartIn2D()
 
     End Sub
