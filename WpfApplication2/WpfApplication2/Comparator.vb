@@ -28,6 +28,7 @@ Public Class Comparator
     Public Children2D As Dictionary(Of oDrawing.PartsList, String)
 
     Public Property Realchildren3D As New ObservableCollection(Of String)
+    Public Property LIstboxChildren2D As New ObservableCollection(Of String)
     Public Property Selected3DElements As New ObservableCollection(Of String)
     Public Property Available2DElements As New ObservableCollection(Of String)
     Public Property Selected2DElements As New ObservableCollection(Of String)
@@ -449,6 +450,8 @@ Public Class Comparator
             Exit Sub
         End Try
 
+        '*************************************************************
+        '*************************************************************
 
         Dim Dwg As oDrawing = New oDrawing
 
@@ -463,42 +466,28 @@ Public Class Comparator
 
         e = UserSel2D.SelectElement3(what, "Select a Product or a Component", False, CATMultiSelTriggWhenUserValidatesSelection, True)
 
-        'Dim MaximumOfColumnsInBigTable As Integer = 0
-        'Dim MaximumOfRowsInBigTable As Integer = 0
-
-        'MaximumOfColumnsInBigTable = 0
-        'MaximumOfRowsInBigTable = 0
-
-
         Dim SelectedTable As Integer
         Dim SelectedTableCollection As New Collection '(Of DrawingTable)
         Dim ActiveTable As DrawingTable
 
-
         Dim ListBox2D As New ListBox
 
         Try
-
-
-
             For SelectedTable = 1 To UserSel2D.Count
-
                 SelectedTableCollection.Add(UserSel2D.Item(SelectedTable).Value)
-                ' ActiveTable = SelectedTableCollection(SelectedTable)
-
-                'MaximumOfRowsInTable += ActiveTable.NumberOfRows
                 MaximumOfRowsInBigTable += SelectedTableCollection(SelectedTable).NumberOfrows
             Next
+
         Catch ex As Exception
             MsgBox("Make sure you select a proper Drawing Table")
         End Try
-        ' MsgBox(MaximumOfRowsInTable)
+
         MaximumOfRowsInBigTable += -1
         MaximumOfColumnsInBigTable = SelectedTableCollection(1).NumberOfColumns - 1
 
 
         ReDim Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable)
-        ' Dim Big2DTable(MaximumOfRowsInBigTable, MaximumOfColumnsInBigTable) As String
+
 
 
         Dim RowIndexOfBigTable As Integer = 0
@@ -511,46 +500,16 @@ Public Class Comparator
         Dim PartNo = New oDrawing.PartNo
         Dim CageCode = New oDrawing.CageCode
 
-        ItemNo.Column = MaximumOfColumnsInBigTable + 1
-        MatSpec.Column = MaximumOfColumnsInBigTable + 1 - 1
-        Nomenclature.Column = MaximumOfColumnsInBigTable + 1 - 2
-        PartNo.Column = MaximumOfColumnsInBigTable + 1 - 3
-        CageCode.Column = MaximumOfColumnsInBigTable + 1 - 4
-
-        Dwg.Number = "Dummy"
-
-
-
 
         For SelectedTable = SelectedTableCollection.Count To 1 Step -1
-
 
             For RowIndexOfTable As Integer = 1 To SelectedTableCollection(SelectedTable).NumberOfRows
                 ActiveTable = SelectedTableCollection(SelectedTable)
 
-                ColumnIndexOfTable = 1
-                'If (ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable)).Contains("QTY") = True And SelectedTable > 1 Then
-                '    Continue For
-                'End If
-
-                'If ActiveTable.GetCellString(RowIndexOfTable, Nomenclature.Column).Contains("NOMENCLATURE") = True And SelectedTable > 1 Then
-                '    Continue For
-                'End If
-
-
-                If Dwg.IsAssembliesColumnSelected(ActiveTable, RowIndexOfTable, PartNo.Column, SelectedTable) = True Then
-
-                    ' Continue For
-                End If
-               
                 For ColumnIndexOfTable = 1 To MaximumOfColumnsInBigTable + 1
                     Big2DTable(RowIndexOfBigTable, ColumnIndexOfTable - 1) = ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable)
-                    If ColumnIndexOfTable < CageCode.Column And Dwg.IsAssembliesColumnSelected(ActiveTable, RowIndexOfTable, ColumnIndexOfTable, SelectedTable) = True Then
-                        Dwg.ParentOf2DAssemblies.Add(ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable))
-                        Available2DElements.Add(Dwg.Number & ActiveTable.GetCellString(RowIndexOfTable, ColumnIndexOfTable))
-                    End If
-
                 Next
+
                 RowIndexOfBigTable += 1
             Next
         Next
@@ -566,16 +525,17 @@ Public Class Comparator
         Dim ParentDescriptionRow As Integer
         Dim QTY As String
 
-        PartsList.DrawingNumber = "B478004"
-        PartsList.DrawingTitle = "BONDED STRUCTURE"
+       
 
         Children2D = New Dictionary(Of oDrawing.PartsList, String)
 
         For i = 0 To MaximumOfRowsInBigTable
-            'For j = 0 To MaximumOfColumnsInBigTable
+
             If IsNumeric(Big2DTable(i, ItemNo.Column)) = True Then
                 PartsList = New oDrawing.PartsList
 
+                PartsList.DrawingNumber = "B478004"
+                PartsList.DrawingTitle = "BONDED STRUCTURE"
                 PartsList.MatSpec = New Collection
                 PartsList.ItemNo = CInt(Big2DTable(i, ItemNo.Column))
                 PartsList.MatSpec.Add(Big2DTable(i, MatSpec.Column))
@@ -583,7 +543,7 @@ Public Class Comparator
                 PartsList.PartNumber = Big2DTable(i, PartNo.Column)
 
                 For ParentColumn = 0 To CageCode.Column - 1
-                    If String.IsNullOrEmpty(Big2DTable(i, ParentColumn)) = False Then
+                    If String.IsNullOrEmpty(Big2DTable(i, ParentColumn)) = False Then ' If the qty is not zero than add the item with the associated parent
                         PartsList.Parent = Big2DTable(MaximumOfRowsInBigTable - 1, ParentColumn)
                         For ParentDescriptionRow = 0 To MaximumOfRowsInBigTable
                             If PartsList.Parent = Big2DTable(ParentDescriptionRow, PartNo.Column) Then
@@ -595,14 +555,20 @@ Public Class Comparator
                     End If
                 Next
             End If
-            'Next
         Next
 
+        Dim Real2Dchildrens = From Child2D In Children2D.AsParallel
+        Select Child2D.Key.DrawingNumber + Child2D.Key.Parent
+        Distinct
+
+        For Each Real2DChild In Real2Dchildrens
+            Available2DElements.Add(Real2DChild)
+        Next
+
+
+
     End Sub
-
-
-    'Sub Write2DToExcel()
-    Sub Write2DToExcel(Selected2DAssy As Integer, Available2DAssy As Integer)
+    Sub Write2DToExcel(Selected2DAssy As String, Available2DAssy As Integer)
 
 
         Dim oXL As Excel.Application
@@ -625,78 +591,24 @@ Public Class Comparator
 
         oXL.DisplayAlerts = False
         oXL.Visible = True
-        '  Dim Selected2DAssy As Integer
-        Dim XLColumn As Integer = 5
+
+        'Dim XLColumn As Integer = 5
+
         Dim XLRow As Integer = 14
-        Dim i As Integer = 0
-        Dim j As Integer = Selected2DAssy
-
-        Dim Dwg As oDrawing
-
-        'Dim Nomenclature As New oDrawing.Nomenclature
-        'Nomenclature.Column = MaximumOfColumnsInBigTable - 2
 
         Dim Real2Dchildren = From Child2D In Children2D.AsParallel() _
-        Where Child2D.Key.Parent = "-501" _
+        Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
         Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature, Child2D.Key.ParentDescription, Child2D.Key.ItemNo, Child2D.Key.MatSpec
 
-
-
         For Each Result2D In Real2Dchildren
-            oXL.ActiveSheet.Cells(i + 13, 5).Value = Result2D.Value
-            oXL.ActiveSheet.Cells(i + 13, 6).Value = Result2D.PartNumber
-            oXL.ActiveSheet.Cells(i + 13, 7).Value = Result2D.Nomenclature
-            oXL.ActiveSheet.Cells(i + 13, 8).Value = Result2D.ItemNo
-            i = +1
+            oXL.ActiveSheet.Cells(XLRow, 5).Value = Result2D.Value
+            oXL.ActiveSheet.Cells(XLRow, 6).Value = Result2D.PartNumber
+            oXL.ActiveSheet.Cells(XLRow, 7).Value = Result2D.Nomenclature
+            oXL.ActiveSheet.Cells(XLRow, 8).Value = Result2D.ItemNo
+            XLRow += 1
         Next
 
 
-        'For i = 0 To MaximumOfRowsInBigTable
-
-
-        '            XLColumn = 5
-        '            For j = Selected2DAssy To MaximumOfColumnsInBigTable
-        '                If String.IsNullOrEmpty(Big2DTable(i, j)) And j = Selected2DAssy Then
-        '                    GoTo GetMeOuttaHere
-        '                    XLRow = XLRow - 1
-        '                Else
-
-        '                End If
-
-
-        '                If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy - 1 Then
-
-
-
-        '                    If (Big2DTable(i, j)).Contains("QTY") = True Then
-        '                        Continue For
-        '                    End If
-
-        '                    If Big2DTable(i, Nomenclature.Column).Contains("NOMENCLATURE") = True Then
-        '                        Continue For
-        '                    End If
-
-
-
-        '                    oXL.ActiveSheet.Cells(XLRow, XLColumn) = Big2DTable(i, j)
-        '                    oXL.ActiveSheet.Cells(XLRow, XLColumn).wraptext = True
-
-
-        '                    If j = MaximumOfColumnsInBigTable - 3 Then
-        '                        oXL.ActiveSheet.Cells(XLRow, XLColumn).columnwidth = 15
-        '                    End If
-
-        '                    If j = MaximumOfColumnsInBigTable - 2 Then
-        '                        oXL.ActiveSheet.Cells(XLRow, XLColumn).columnwidth = 35
-
-        '                    End If
-        '                    XLColumn = XLColumn + 1
-        '                End If
-        '            Next j
-
-        '            XLRow = XLRow + 1
-        'GetMeOuttaHere:
-        '        Next
 
         oXL.DisplayAlerts = True
     End Sub

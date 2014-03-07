@@ -19,6 +19,8 @@ Imports System.Collections.ObjectModel
 Imports INFITF
 Imports System.Windows.Media.Animation
 Imports System.IO
+Imports WpfApplication2.oDrawing
+
 'Imports System.Xml.Linq
 
 Public Class MainWindow
@@ -200,6 +202,7 @@ Public Class MainWindow
         'Dim Comparator As New Comparator
         Comparator.Select2D()
 
+        
         ListBox2D.ItemsSource = Comparator.Available2DElements
 
         ' Await Task.Delay(30000)
@@ -268,7 +271,7 @@ Public Class MainWindow
     End Sub
     Private Sub XLLabelOutput_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles XLLabelOutput.MouseLeftButtonDown
 
-        MsgBox("3D: " & Is3DSelected & "2D: " & Is2DSelected & InputSum())
+        ' MsgBox("3D: " & Is3DSelected & "2D: " & Is2DSelected & InputSum())
 
         Select Case InputSum()
 
@@ -283,7 +286,9 @@ Public Class MainWindow
                 Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
         End Select
 
-        Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+        ListBox2D.SelectedValue.ToString()
+
+        Call Comparator.Write2DToExcel(ListBox2D.SelectedValue.ToString(), ListBox2D.Items.Count)
     End Sub
     Private Sub ComparatorWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles ComparatorWindow.Loaded
 
