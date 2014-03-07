@@ -566,6 +566,9 @@ Public Class Comparator
         Dim ParentDescriptionRow As Integer
         Dim QTY As String
 
+        PartsList.DrawingNumber = "B478004"
+        PartsList.DrawingTitle = "BONDED STRUCTURE"
+
         Children2D = New Dictionary(Of oDrawing.PartsList, String)
 
         For i = 0 To MaximumOfRowsInBigTable
@@ -629,58 +632,71 @@ Public Class Comparator
         Dim j As Integer = Selected2DAssy
 
         Dim Dwg As oDrawing
-        Dim Nomenclature As New oDrawing.Nomenclature
-        Nomenclature.Column = MaximumOfColumnsInBigTable - 2
+
+        'Dim Nomenclature As New oDrawing.Nomenclature
+        'Nomenclature.Column = MaximumOfColumnsInBigTable - 2
+
+        Dim Real2Dchildren = From Child2D In Children2D.AsParallel() _
+        Where Child2D.Key.Parent = "-501" _
+        Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature, Child2D.Key.ParentDescription, Child2D.Key.ItemNo, Child2D.Key.MatSpec
 
 
 
-
-        For i = 0 To MaximumOfRowsInBigTable
-
-
-            XLColumn = 5
-            For j = Selected2DAssy To MaximumOfColumnsInBigTable
-                If String.IsNullOrEmpty(Big2DTable(i, j)) And j = Selected2DAssy Then
-                    GoTo GetMeOuttaHere
-                    XLRow = XLRow - 1
-                Else
-
-                End If
-
-
-                If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy - 1 Then
-
-
-
-                    If (Big2DTable(i, j)).Contains("QTY") = True Then
-                        Continue For
-                    End If
-
-                    If Big2DTable(i, Nomenclature.Column).Contains("NOMENCLATURE") = True Then
-                        Continue For
-                    End If
-
-
-
-                    oXL.ActiveSheet.Cells(XLRow, XLColumn) = Big2DTable(i, j)
-                    oXL.ActiveSheet.Cells(XLRow, XLColumn).wraptext = True
-
-
-                    If j = MaximumOfColumnsInBigTable - 3 Then
-                        oXL.ActiveSheet.Cells(XLRow, XLColumn).columnwidth = 15
-                    End If
-
-                    If j = MaximumOfColumnsInBigTable - 2 Then
-                        oXL.ActiveSheet.Cells(XLRow, XLColumn).columnwidth = 35
-
-                    End If
-                    XLColumn = XLColumn + 1
-                End If
-            Next j
-
-            XLRow = XLRow + 1
-GetMeOuttaHere:
+        For Each Result2D In Real2Dchildren
+            oXL.ActiveSheet.Cells(i + 13, 5).Value = Result2D.Value
+            oXL.ActiveSheet.Cells(i + 13, 6).Value = Result2D.PartNumber
+            oXL.ActiveSheet.Cells(i + 13, 7).Value = Result2D.Nomenclature
+            oXL.ActiveSheet.Cells(i + 13, 8).Value = Result2D.ItemNo
+            i = +1
         Next
+
+
+        'For i = 0 To MaximumOfRowsInBigTable
+
+
+        '            XLColumn = 5
+        '            For j = Selected2DAssy To MaximumOfColumnsInBigTable
+        '                If String.IsNullOrEmpty(Big2DTable(i, j)) And j = Selected2DAssy Then
+        '                    GoTo GetMeOuttaHere
+        '                    XLRow = XLRow - 1
+        '                Else
+
+        '                End If
+
+
+        '                If j = Selected2DAssy Or j > MaximumOfColumnsInBigTable - Available2DAssy - 1 Then
+
+
+
+        '                    If (Big2DTable(i, j)).Contains("QTY") = True Then
+        '                        Continue For
+        '                    End If
+
+        '                    If Big2DTable(i, Nomenclature.Column).Contains("NOMENCLATURE") = True Then
+        '                        Continue For
+        '                    End If
+
+
+
+        '                    oXL.ActiveSheet.Cells(XLRow, XLColumn) = Big2DTable(i, j)
+        '                    oXL.ActiveSheet.Cells(XLRow, XLColumn).wraptext = True
+
+
+        '                    If j = MaximumOfColumnsInBigTable - 3 Then
+        '                        oXL.ActiveSheet.Cells(XLRow, XLColumn).columnwidth = 15
+        '                    End If
+
+        '                    If j = MaximumOfColumnsInBigTable - 2 Then
+        '                        oXL.ActiveSheet.Cells(XLRow, XLColumn).columnwidth = 35
+
+        '                    End If
+        '                    XLColumn = XLColumn + 1
+        '                End If
+        '            Next j
+
+        '            XLRow = XLRow + 1
+        'GetMeOuttaHere:
+        '        Next
 
         oXL.DisplayAlerts = True
     End Sub

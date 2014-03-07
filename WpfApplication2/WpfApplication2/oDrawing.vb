@@ -126,6 +126,8 @@ Public Class oDrawing
         Public Nomenclature As String
         Public MatSpec As Collection
         Public ItemNo As Integer
+        Public DrawingNumber As String
+        Public DrawingTitle As String
     End Structure
 
     Public Class TFList
