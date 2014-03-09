@@ -20,6 +20,7 @@ Imports INFITF
 Imports System.Windows.Media.Animation
 Imports System.IO
 Imports WpfApplication2.oDrawing
+Imports Excel = Microsoft.Office.Interop.Excel
 
 'Imports System.Xml.Linq
 
@@ -226,7 +227,7 @@ Public Class MainWindow
         'Next
 
         Call SelectionEvents(_3DLabel, Is3DSelected)
-
+        Me.UpdateLayout()
         'Dim Comparator As New Comparator
         Call Comparator.Select3D()
         Call SelectionEvents(_3DLabel, Is3DSelected)
@@ -241,13 +242,6 @@ Public Class MainWindow
         DataGrid1.ItemsSource = Comparator.Realchildren3D
         DataGrid1.DataContext = Comparator.Children3D
         ListBox3D.SelectAll()
-
-
-
-
-
-
-
 
 
         ' ListBox1.ItemsSource = Comparator.Realchildren3D
@@ -278,17 +272,18 @@ Public Class MainWindow
             Case 0
                 MsgBox("Choose at least one input")
             Case 2
-                Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+                Call Comparator.Write2DToExcel(ListBox2D.SelectedValue.ToString(), ListBox2D.Items.Count)
             Case 4
                 Call Comparator.Write3DToExcel()
             Case 6
-                Call Comparator.Write3DToExcel()
-                Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+                'Call Comparator.Write3DToExcel()
+                'Call Comparator.Write2DToExcel(ListBox2D.SelectedIndex, ListBox2D.Items.Count)
+                Call Comparator.Wrtite3Dvs2DtoXL(ListBox2D.SelectedValue.ToString())
         End Select
 
-        ListBox2D.SelectedValue.ToString()
+        ' ListBox2D.SelectedValue.ToString()
 
-        Call Comparator.Write2DToExcel(ListBox2D.SelectedValue.ToString(), ListBox2D.Items.Count)
+        '  Call Comparator.Write2DToExcel(ListBox2D.SelectedValue.ToString(), ListBox2D.Items.Count)
     End Sub
     Private Sub ComparatorWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles ComparatorWindow.Loaded
 
@@ -350,6 +345,9 @@ Public Class MainWindow
     End Sub
 
     Private Sub XLLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles XLLabel.MouseLeftButtonDown
+        Is3DSelected = False
+        Call SelectionEvents(_3DLabel, Is2DSelected)
+
         Comparator.SelectXL()
     End Sub
 
@@ -358,19 +356,58 @@ Public Class MainWindow
     End Sub
 
     Private Sub HTMLLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles HTMLLabel.MouseLeftButtonDown
-        Select Case InputSum()
 
-            Case 0
-                MsgBox("Choose at least one input")
-            Case 1
-                Call Comparator.XLtoHTML()
-            Case 2
-                Call Comparator.Write2DtoHTML()
-            Case 4
-                Call Comparator.Write3DtoHTML()
-            Case 6
-                Call Comparator.Wrtite3Dvs2DtoHTML()
+        Comparator.HTMLGenerator()
+        'Select Case InputSum()
 
-        End Select
+        '    Case 0
+        '        MsgBox("Choose at least one input")
+        '    Case 1
+        '        Call Comparator.XLtoHTML()
+        '    Case 2
+        '        Call Comparator.Write2DtoHTML()
+        '    Case 4
+        '        Call Comparator.Write3DtoHTML()
+        '    Case 6
+        '        Call Comparator.Wrtite3Dvs2DtoHTML(ListBox2D.SelectedValue.ToString())
+
+        'End Select
+    End Sub
+
+    Private Sub XLLabelOutput_MouseRightButtonDown(sender As Object, e As MouseButtonEventArgs) Handles XLLabelOutput.MouseRightButtonDown
+        'Dim oXL As Object
+
+        ''As Excel.Workbook
+        'Dim oSheet 'As Excel.Worksheet
+
+
+        'oXL = GetObject(, "Excel.Application")
+
+        'oXL = CreateObject("Excel.Application")
+
+        'oXL.Visible = True
+        'Dim oWB As Excel.Workbooks
+
+        '' oXL.Sheets(1).Cells.Clear()
+        '' Catch ex As Exception
+        ''oXL = New Excel.Application
+
+
+        ''End Try
+
+        Dim oXL As Excel.Application = Nothing
+        Dim oWB As Excel.Workbook = Nothing
+        Dim oSheet As Excel.Worksheet = Nothing
+
+
+        ' Start Excel and get Application object.
+        oXL = CreateObject("Excel.Application")
+        oXL.Visible = True
+
+        ' Get a new workbook.
+        'oWB=oXL.Workbooks.Add 
+        oWB = oXL.Workbooks.Open("C:\Users\Al\Dropbox\ESS\The Comparator\The Comparator latest.xlsm", UpdateLinks:=0, ReadOnly:=True)
+        oSheet = oWB.ActiveSheet
+
     End Sub
 End Class

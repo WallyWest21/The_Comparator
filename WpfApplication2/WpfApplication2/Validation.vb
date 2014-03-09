@@ -34,9 +34,8 @@
         Component = Split(oComponent.ReferenceProduct.Parent.Name, ".")
             'If IsProduct(oComponent) = True Then
         Catch ex As Exception
-            MsgBox("Invalid Part Number")
+            'MsgBox("Invalid Part Number")
         End Try
-
 
         If oComponent.ReferenceProduct.Name <> Component(0) Then
             IsComponent = True

@@ -793,6 +793,20 @@ Public Class Comparator
                         </table>
                     </html>
 
+        Dim HTML2DReport As String
+
+
+        HTML2DReport = "<html><head><title>" & myTitle & "</title> <style> table { border-width: 7px; border-style: outset; } </style></head>"     ' http://www.tizag.com/cssT/border.php
+        HTML2DReport += "<body body bgcolor=""#f5f5dc""><h1 align=""center"">Welcome to my 2D hood! Where the hood at? </h1>"
+        HTML2DReport += "<table border=""1"" border-style:groove align=""center""><tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th><th>NPCF</th></tr>"
+
+        For i = 86 To 134
+            HTML2DReport += "<tr><td align=""center"">" & i & "</td><td><a href=" & Link & ">CouldBeAVariable1</a></td><td>" & i & "</td><td><input type=""button"" onclick=""window.location.href(" & "'http://www.google.com'" & " );"" value=""NPCF""></td></tr>"
+        Next
+
+        'HTML2DReport += "<tr><td>1</td><td><a href=" & Link & ">CouldBeAVariable1</a></td></tr>"
+        HTML2DReport += "</table></body></html>"
+       
 
 
         ' myHTML.Element("html").Element("body").Element("table").Element("tr").AddAfterSelf(D3HTML)
@@ -831,7 +845,7 @@ Public Class Comparator
         ' <%= D3HTML %>
         '<td>1</td><td><a href=<%= Link %>>CouldBeAVariable</a></td>
         Using writer As StreamWriter = New StreamWriter("TheComparator.html")
-            writer.Write(myHTML)
+            writer.Write(HTML2DReport)
         End Using
     End Sub
 
@@ -903,8 +917,109 @@ Public Class Comparator
     Sub XLtoHTML()
     End Sub
 
-    Sub Wrtite3Dvs2DtoHTML()
+    Sub Wrtite3Dvs2DtoHTML(Selected2DAssy As String)
 
+
+        Dim PartNo3DChildren = From PartNo3DChild In Children3D _
+        Group PartNo3DChild By PartNo3DChild.partnumber, PartNo3DChild.nomenclature Into Group _
+        Select partnumber = partnumber
+
+        Dim PartNo2DChildren = From PartNo2DChild In Children2D _
+        Where PartNo2DChild.Key.DrawingNumber + PartNo2DChild.Key.Parent = Selected2DAssy _
+        Select PartNo2DChild.Key.PartNumber
+
+        Dim PartNoCompare = PartNo3DChildren.Intersect(PartNo2DChildren)
+        For Each part In PartNoCompare
+            MsgBox(part)
+        Next
+
+
+        Dim PartNoAndQty3DChildren = From PartNoAndQty3DChild In Children3D _
+        Group PartNoAndQty3DChild By PartNoAndQty3DChild.partnumber Into Group _
+        Select Value = Group.Count.ToString, partnumber = partnumber
+
+        Dim PartNoAndQty2DChildren = From PartNoAndQty2DChild In Children2D _
+        Where PartNoAndQty2DChild.Key.DrawingNumber + PartNoAndQty2DChild.Key.Parent = Selected2DAssy _
+        Select PartNoAndQty2DChild.Value, PartNoAndQty2DChild.Key.PartNumber
+
+        Dim PartNoAndQtyCompare = PartNoAndQty2DChildren.Except(PartNoAndQty3DChildren)
+
+            For Each PartAndQtyChild In PartNoAndQtyCompare
+                ' MsgBox(PartAndQtyChild.partnumber)
+                MsgBox(PartAndQtyChild)
+            Next
+
+        'Catch ex As Exception
+
+        If PartNoAndQty2DChildren.Count = 0 Then
+            MsgBox("There is No 2D")
+        End If
+
+        If PartNoAndQty3DChildren.Count = 0 Then
+            MsgBox("There is No 3D")
+        End If
+
+        MsgBox("Can't do it!!")
+        'End Try
+
+        ' Dim Real3Dchildren = From child In Children3D _
+        ' Group child By child.partnumber, child.nomenclature Into Group _
+        ' Select qty = Group.Count.ToString, partnumber = partnumber, nomenclature = nomenclature
+
+        ' Dim Real2Dchildren = From Child2D In Children2D _
+        ' Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
+        ' Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature
+
+
+    End Sub
+
+
+    Sub Wrtite3Dvs2DtoXL(Selected2DAssy As String)
+
+        Dim oXL As Excel.Application = Nothing
+        Dim oWB As Excel.Workbook = Nothing
+        Dim oSheet As Excel.Worksheet = Nothing
+
+
+        ' Start Excel and get Application object.
+        oXL = CreateObject("Excel.Application")
+        oXL.Visible = True
+
+        ' Get a new workbook.
+        'oWB=oXL.Workbooks.Add 
+        oWB = oXL.Workbooks.Open("C:\Users\Al\Dropbox\ESS\The Comparator\The Comparator latest.xlsm", UpdateLinks:=0, ReadOnly:=True)
+        oSheet = oWB.ActiveSheet
+
+
+
+        '3D Excel export
+        Dim XL3DRow As Integer = 14
+
+        Dim Realchildren3D = From Child3D In Children3D.AsParallel() _
+        Group Child3D By Child3D.partnumber, Child3D.nomenclature Into Group _
+        Select qty = Group.Count, partnumber = partnumber, nomenclature = nomenclature
+
+        For Each Result3D In Realchildren3D
+            oXL.ActiveSheet.Cells(XL3DRow, 1).Value = Result3D.qty
+            oXL.ActiveSheet.Cells(XL3DRow, 2).Value = Result3D.partnumber
+            oXL.ActiveSheet.Cells(XL3DRow, 3).Value = Result3D.nomenclature
+            XL3DRow += 1
+        Next
+
+        '2D Excel export
+        Dim XL2DRow As Integer = 14
+
+        Dim RealChildren2D = From Child2D In Children2D.AsParallel() _
+        Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
+        Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature, Child2D.Key.ParentDescription, Child2D.Key.ItemNo, Child2D.Key.MatSpec
+
+        For Each Result2D In RealChildren2D
+            oXL.ActiveSheet.Cells(XL2DRow, 5).Value = Result2D.Value
+            oXL.ActiveSheet.Cells(XL2DRow, 6).Value = Result2D.PartNumber
+            oXL.ActiveSheet.Cells(XL2DRow, 7).Value = Result2D.Nomenclature
+            oXL.ActiveSheet.Cells(XL2DRow, 9).Value = Result2D.ItemNo
+            XL2DRow += 1
+        Next
     End Sub
 
     Sub Write2DtoHTML()
@@ -923,27 +1038,5 @@ Public Class Comparator
     Sub Is3DNomenclatureSameAs2D()
 
     End Sub
-    Public Class ChildrenList1
-        Inherits ObservableCollection(Of String)
-        ' Implements INotifyPropertyChanged
-        ' Public Property pChildrenList As New ObservableCollection(Of String)
-        ' Inherits ObservableCollection(Of Object)
-        Public Sub New()
-
-            '  Dim Item
-
-            ' Dim Comparator As New Comparator
-            ' For Each Item In Comparator.Children3D
-            'For Item = 1 To 25
-            MyBase.Add("nkhgkghbkhgkhklhgbkjhgjkhgkhfvk")
-            MyBase.Add("kl;njkbjfkuigkhjklk")
-            ' Next
-
-            MyBase.Add("second tolast")
-            MyBase.Add("kl;lsdfgd Super Last1")
-        End Sub
-
-
-
-    End Class
+  
 End Class
