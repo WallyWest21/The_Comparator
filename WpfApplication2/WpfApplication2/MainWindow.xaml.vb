@@ -357,21 +357,24 @@ Public Class MainWindow
 
     Private Sub HTMLLabel_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles HTMLLabel.MouseLeftButtonDown
 
-        Comparator.HTMLGenerator()
-        'Select Case InputSum()
+        ' Comparator.HTMLGenerator()
+        'Call Comparator.Write3DtoHTML()
+        Select Case InputSum()
 
-        '    Case 0
-        '        MsgBox("Choose at least one input")
-        '    Case 1
-        '        Call Comparator.XLtoHTML()
-        '    Case 2
-        '        Call Comparator.Write2DtoHTML()
-        '    Case 4
-        '        Call Comparator.Write3DtoHTML()
-        '    Case 6
-        '        Call Comparator.Wrtite3Dvs2DtoHTML(ListBox2D.SelectedValue.ToString())
+            Case 0
+                MsgBox("Choose at least one input")
+            Case 1
+                Call Comparator.XLtoHTML()
+            Case 2
+                Call Comparator.Write2DtoHTML(ListBox2D.SelectedValue.ToString())
+            Case 4
+                Call Comparator.Write3DtoHTML()
+            Case 6
+                Call Comparator.Wrtite3Dvs2DtoHTML(ListBox2D.SelectedValue.ToString())
 
-        'End Select
+        End Select
+
+
     End Sub
 
     Private Sub XLLabelOutput_MouseRightButtonDown(sender As Object, e As MouseButtonEventArgs) Handles XLLabelOutput.MouseRightButtonDown
