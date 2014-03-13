@@ -12,6 +12,7 @@ Imports System.Windows.Controls
 Imports WpfApplication2
 Imports System.Threading
 Imports System.IO
+Imports System.Linq
 
 'Imports INFITF
 Public Class Comparator
@@ -875,65 +876,67 @@ Public Class Comparator
 
         Dim PartNo3DChildren = From PartNo3DChild In Children3D _
         Group PartNo3DChild By PartNo3DChild.partnumber, PartNo3DChild.nomenclature Into Group _
-       Select Qty = Group.Count.ToString
+       Select Qty = Group.Count.ToString ', partnumber = partnumber
         'Select partnumber = partnumber
 
         Dim PartNo2DChildren = From PartNo2DChild In Children2D _
         Where PartNo2DChild.Key.DrawingNumber + PartNo2DChild.Key.Parent = Selected2DAssy _
-        Select Qty = PartNo2DChild.Value
+        Select Qty = PartNo2DChild.Value ', partnumber = PartNo2DChild.Key.PartNumber
 
-        'Select PartNo2DChild.Key.PartNumber
+        ' 'Select PartNo2DChild.Key.PartNumber
 
         Dim PartNoCompare = PartNo3DChildren.Intersect(PartNo2DChildren)
         For Each part In PartNoCompare
             MsgBox(part)
         Next
 
-        MsgBox("hey")
+        ' MsgBox("hey")
 
 
         Dim PartNoAndQty2DChildren = From PartNoAndQty2DChild In Children2D _
         Where PartNoAndQty2DChild.Key.DrawingNumber + PartNoAndQty2DChild.Key.Parent = Selected2DAssy _
-        Select Qty = PartNoAndQty2DChild.Value, Partnumber = PartNoAndQty2DChild.Key.PartNumber
+        Select Qty = PartNoAndQty2DChild.Value, Partnumber = PartNoAndQty2DChild.Key.PartNumber.ToString
 
         Dim Items2D = PartNoAndQty2DChildren.ToArray
 
         Dim PartNoAndQty3DChildren = From PartNoAndQty3DChild In Children3D _
-        Group PartNoAndQty3DChild By PartNoAndQty3DChild.partnumber Into Group _
-        Select Qty = Group.Count, Partnumber = partnumber
+        Group PartNoAndQty3DChild By PartNoAndQty3DChild.partnumber, PartNoAndQty3DChild.nomenclature Into Group _
+        Select Qty = Group.Count.ToString, Partnumber = partnumber.ToString
 
         Dim Items3D = PartNoAndQty3DChildren.ToArray
 
-        Dim PartNoAndQtyCompare = From PartNoAndQtyComparechild In Items2D.Union(Items2D)
-        Select qty = PartNoAndQtyComparechild.Qty, Partnumber = PartNoAndQtyComparechild.Partnumber
+        ' Dim PartNoAndQtyCompare = Items2D.Union(Items3D)
+
+        Dim PartNoAndQtyCompare = From PartNoAndQtyComparechild In PartNoAndQty3DChildren.Intersect(PartNoAndQty2DChildren)
+        Select Qty = PartNoAndQtyComparechild.Qty, Partnumber = PartNoAndQtyComparechild.Partnumber
 
         Dim resultquery As Array = PartNoAndQtyCompare.ToArray
 
-        For Each PartAndQtyChild In resultquery
+        For Each PartAndQtyChild In PartNoAndQtyCompare
             ' MsgBox(PartAndQtyChild.partnumber)
-            MsgBox("Except" & PartAndQtyChild.qty & PartAndQtyChild.Partnumber)
+            MsgBox("Except " & PartAndQtyChild.Qty & " " & PartAndQtyChild.Partnumber)
         Next
 
-        'Catch ex As Exception
+            'Catch ex As Exception
 
-        'If PartNoAndQty2DChildren.Count = 0 Then
-        '    MsgBox("There is No 2D")
-        '    End If
+            'If PartNoAndQty2DChildren.Count = 0 Then
+            '    MsgBox("There is No 2D")
+            '    End If
 
-        'If PartNoAndQty3DChildren.Count = 0 Then
-        '    MsgBox("There is No 3D")
-        '    End If
+            'If PartNoAndQty3DChildren.Count = 0 Then
+            '    MsgBox("There is No 3D")
+            '    End If
 
-        'MsgBox("Can't do it!!")
-        'End Try
+            'MsgBox("Can't do it!!")
+            'End Try
 
-        ' Dim Real3Dchildren = From child In Children3D _
-        ' Group child By child.partnumber, child.nomenclature Into Group _
-        ' Select qty = Group.Count.ToString, partnumber = partnumber, nomenclature = nomenclature
+            ' Dim Real3Dchildren = From child In Children3D _
+            ' Group child By child.partnumber, child.nomenclature Into Group _
+            ' Select qty = Group.Count.ToString, partnumber = partnumber, nomenclature = nomenclature
 
-        ' Dim Real2Dchildren = From Child2D In Children2D _
-        ' Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
-        ' Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature
+            ' Dim Real2Dchildren = From Child2D In Children2D _
+            ' Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
+            ' Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature
 
 
     End Sub
