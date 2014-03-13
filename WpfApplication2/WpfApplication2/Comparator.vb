@@ -165,6 +165,7 @@ Public Class Comparator
         '******************************************************************************************
         Dim Realchildren = From child In Children3D.AsParallel() _
         Group child By child.partnumber, child.nomenclature Into Group _
+        Order By partnumber _
         Select qty = Group.Count, partnumber = partnumber, nomenclature = nomenclature
 
 
@@ -848,6 +849,7 @@ Public Class Comparator
        
         Dim Realchildrens = From childs In Children3D.AsParallel() _
         Group childs By childs.partnumber, childs.nomenclature Into Group _
+        Order By partnumber _
         Select qty = Group.Count, partnumber = partnumber, nomenclature = nomenclature
 
         Dim HTML3DReport As String
@@ -866,67 +868,104 @@ Public Class Comparator
             writer.Write(HTML3DReport)
         End Using
     End Sub
-    Sub XLtoHTML()
-    End Sub
+    
+   
 
     Sub Wrtite3Dvs2DtoHTML(Selected2DAssy As String)
 
-
-        'Dim PartNo3DChildren = From PartNo3DChild In Children3D _
-        'Group PartNo3DChild By PartNo3DChild.partnumber, PartNo3DChild.nomenclature Into Group _
+        Dim PartNo3DChildren = From PartNo3DChild In Children3D _
+        Group PartNo3DChild By PartNo3DChild.partnumber, PartNo3DChild.nomenclature Into Group _
+       Select Qty = Group.Count.ToString
         'Select partnumber = partnumber
 
-        'Dim PartNo2DChildren = From PartNo2DChild In Children2D _
-        'Where PartNo2DChild.Key.DrawingNumber + PartNo2DChild.Key.Parent = Selected2DAssy _
+        Dim PartNo2DChildren = From PartNo2DChild In Children2D _
+        Where PartNo2DChild.Key.DrawingNumber + PartNo2DChild.Key.Parent = Selected2DAssy _
+        Select Qty = PartNo2DChild.Value
+
         'Select PartNo2DChild.Key.PartNumber
 
-        'Dim PartNoCompare = PartNo3DChildren.Intersect(PartNo2DChildren)
-        'For Each part In PartNoCompare
-        '    MsgBox(part)
-        'Next
+        Dim PartNoCompare = PartNo3DChildren.Intersect(PartNo2DChildren)
+        For Each part In PartNoCompare
+            MsgBox(part)
+        Next
 
         MsgBox("hey")
 
-        Dim PartNoAndQty3DChildren = From PartNoAndQty3DChild In Children3D _
-        Group PartNoAndQty3DChild By PartNoAndQty3DChild.partnumber Into Group _
-        Select Qty = Group.Count.ToString, Partnumber = partnumber
 
         Dim PartNoAndQty2DChildren = From PartNoAndQty2DChild In Children2D _
         Where PartNoAndQty2DChild.Key.DrawingNumber + PartNoAndQty2DChild.Key.Parent = Selected2DAssy _
         Select Qty = PartNoAndQty2DChild.Value, Partnumber = PartNoAndQty2DChild.Key.PartNumber
 
-        Dim PartNoAndQtyCompare = (PartNoAndQty3DChildren.Union(PartNoAndQty2DChildren))
+        Dim Items2D = PartNoAndQty2DChildren.ToArray
 
-        For Each PartAndQtyChild In PartNoAndQtyCompare
+        Dim PartNoAndQty3DChildren = From PartNoAndQty3DChild In Children3D _
+        Group PartNoAndQty3DChild By PartNoAndQty3DChild.partnumber Into Group _
+        Select Qty = Group.Count, Partnumber = partnumber
+
+        Dim Items3D = PartNoAndQty3DChildren.ToArray
+
+        Dim PartNoAndQtyCompare = From PartNoAndQtyComparechild In Items2D.Union(Items2D)
+        Select qty = PartNoAndQtyComparechild.Qty, Partnumber = PartNoAndQtyComparechild.Partnumber
+
+        Dim resultquery As Array = PartNoAndQtyCompare.ToArray
+
+        For Each PartAndQtyChild In resultquery
             ' MsgBox(PartAndQtyChild.partnumber)
-            MsgBox("Except" & PartAndQtyChild.Qty & PartAndQtyChild.Partnumber)
+            MsgBox("Except" & PartAndQtyChild.qty & PartAndQtyChild.Partnumber)
         Next
 
-            'Catch ex As Exception
+        'Catch ex As Exception
 
-        If PartNoAndQty2DChildren.Count = 0 Then
-            MsgBox("There is No 2D")
-            End If
+        'If PartNoAndQty2DChildren.Count = 0 Then
+        '    MsgBox("There is No 2D")
+        '    End If
 
-        If PartNoAndQty3DChildren.Count = 0 Then
-            MsgBox("There is No 3D")
-            End If
+        'If PartNoAndQty3DChildren.Count = 0 Then
+        '    MsgBox("There is No 3D")
+        '    End If
 
-        MsgBox("Can't do it!!")
-            'End Try
+        'MsgBox("Can't do it!!")
+        'End Try
 
-            ' Dim Real3Dchildren = From child In Children3D _
-            ' Group child By child.partnumber, child.nomenclature Into Group _
-            ' Select qty = Group.Count.ToString, partnumber = partnumber, nomenclature = nomenclature
+        ' Dim Real3Dchildren = From child In Children3D _
+        ' Group child By child.partnumber, child.nomenclature Into Group _
+        ' Select qty = Group.Count.ToString, partnumber = partnumber, nomenclature = nomenclature
 
-            ' Dim Real2Dchildren = From Child2D In Children2D _
-            ' Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
-            ' Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature
+        ' Dim Real2Dchildren = From Child2D In Children2D _
+        ' Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
+        ' Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature
 
 
     End Sub
 
+    Sub Write2DtoHTML(Selected2DAssy As String)
+        Dim myTitle = "Hello this the comparator report"
+        Dim Link As String = "D:\B475012-507.txt" '"http://www.w3schools.com"
 
+        Dim RealChildren2D = From Child2D In Children2D.AsParallel() _
+        Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
+        Order By Child2D.Key.PartNumber _
+        Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature, Child2D.Key.ParentDescription, Child2D.Key.ItemNo, Child2D.Key.MatSpec
+
+
+        Dim HTML2DReport As String
+
+        HTML2DReport = "<html><head><title>" & myTitle & "</title> <style> table { border-width: 7px; border-style: outset; } </style></head>"     ' http://www.tizag.com/cssT/border.php
+        HTML2DReport += "<body body bgcolor=""#f5f5dc""><h1 align=""center"">Welcome to my 2D hood! Where the hood at? </h1>"
+        HTML2DReport += "<table border=""1"" border-style:groove align=""center""><tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th><th>NPCF</th></tr>"
+
+        For Each results In RealChildren2D
+            HTML2DReport += "<tr><td align=""center"">" & results.Value & "</td><td><a href=" & Link & ">" & results.PartNumber & "</a></td><td>" & results.Nomenclature & "</td><td><input type=""button"" onclick=""window.location.href(" & "'http://www.google.com'" & " );"" value=""NPCF""></td></tr>"
+        Next
+
+        HTML2DReport += "</table></body></html>"
+
+        Using writer As StreamWriter = New StreamWriter("TheComparator.html")
+            writer.Write(HTML2DReport)
+        End Using
+    End Sub
+    Sub XLtoHTML()
+    End Sub
     Sub Wrtite3Dvs2DtoXL(Selected2DAssy As String)
 
         Dim oXL As Excel.Application = Nothing
@@ -973,31 +1012,6 @@ Public Class Comparator
         Next
     End Sub
 
-    Sub Write2DtoHTML(Selected2DAssy As String)
-        Dim myTitle = "Hello this the comparator report"
-        Dim Link As String = "D:\B475012-507.txt" '"http://www.w3schools.com"
-
-        Dim RealChildren2D = From Child2D In Children2D.AsParallel() _
-        Where Child2D.Key.DrawingNumber + Child2D.Key.Parent = Selected2DAssy _
-        Select Child2D.Value, Child2D.Key.PartNumber, Child2D.Key.Nomenclature, Child2D.Key.ParentDescription, Child2D.Key.ItemNo, Child2D.Key.MatSpec
-
-
-        Dim HTML2DReport As String
-
-        HTML2DReport = "<html><head><title>" & myTitle & "</title> <style> table { border-width: 7px; border-style: outset; } </style></head>"     ' http://www.tizag.com/cssT/border.php
-        HTML2DReport += "<body body bgcolor=""#f5f5dc""><h1 align=""center"">Welcome to my 2D hood! Where the hood at? </h1>"
-        HTML2DReport += "<table border=""1"" border-style:groove align=""center""><tr><th>QTY</th><th>Part Number</th><th>Nomenclature</th><th>NPCF</th></tr>"
-
-        For Each results In RealChildren2D
-            HTML2DReport += "<tr><td align=""center"">" & results.Value & "</td><td><a href=" & Link & ">" & results.PartNumber & "</a></td><td>" & results.Nomenclature & "</td><td><input type=""button"" onclick=""window.location.href(" & "'http://www.google.com'" & " );"" value=""NPCF""></td></tr>"
-        Next
-
-        HTML2DReport += "</table></body></html>"
-
-        Using writer As StreamWriter = New StreamWriter("TheComparator.html")
-            writer.Write(HTML2DReport)
-        End Using
-    End Sub
 
     Sub Is3DPartIn2D()
 
@@ -1011,5 +1025,5 @@ Public Class Comparator
     Sub Is3DNomenclatureSameAs2D()
 
     End Sub
-  
+
 End Class
